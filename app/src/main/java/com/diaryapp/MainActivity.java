@@ -1,8 +1,10 @@
 package com.diaryapp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -10,19 +12,22 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.diaryapp.Database.DbHandler;
+
 import com.diaryapp.databinding.ActivityMainBinding;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
-    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        com.diaryapp.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
@@ -34,6 +39,20 @@ public class MainActivity extends AppCompatActivity {
         binding.fab.setOnClickListener(view -> Snackbar.make(view, "Добавляется новое событие", Snackbar.LENGTH_LONG)
                 .setAnchorView(R.id.fab)
                 .setAction("Action", null).show());
+
+        // Пример использования DbHandler в активности
+        DbHandler dbHandler = new DbHandler(this);
+
+        // Получение названий всех групп
+        List<String> groupNames = dbHandler.getAllGroupNames();
+        System.out.println(groupNames.size());
+        // Вывод названий групп в консоль или Toast
+        for (String groupName : groupNames) {
+            System.out.println(groupName);
+        }
+        // Закрываем DbHandler после использования
+        dbHandler.close();
+
     }
 
     @Override
