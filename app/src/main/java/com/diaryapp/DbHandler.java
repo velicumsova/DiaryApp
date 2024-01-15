@@ -1,4 +1,4 @@
-package com.diaryapp.Database;
+package com.diaryapp;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -110,8 +110,12 @@ public class DbHandler extends SQLiteOpenHelper {
     // управление событиями -----------------------------------------------
 
     // добавить новое событие
-    public Event addEvent(Event event) {
+    public void addEvent(Event event) {
         SQLiteDatabase db = this.getWritableDatabase();
+
+        if (!doesGroupExist(event.getGroupName(), db)) {
+            addGroup(event.getGroupName());
+        }
 
         ContentValues values = new ContentValues();
         values.put("is_closed", event.isClosed());
@@ -123,11 +127,14 @@ public class DbHandler extends SQLiteOpenHelper {
         values.put("event_end_time", event.getEventEndTime());
         values.put("event_color", event.getEventColor());
 
-        long insertedId = db.insert("events", null, values);
+        db.insert("events", null, values);
         db.close();
-
-        event.setEventId((int) insertedId);
-        return event;
+    }
+    private boolean doesGroupExist(String groupName, SQLiteDatabase db) {
+        Cursor cursor = db.rawQuery("SELECT * FROM event_groups WHERE group_name=?", new String[]{groupName});
+        boolean groupExists = cursor.getCount() > 0;
+        cursor.close();
+        return groupExists;
     }
 
     // удалить событие
@@ -215,6 +222,4 @@ public class DbHandler extends SQLiteOpenHelper {
 
         return events;
     }
-
-
 }

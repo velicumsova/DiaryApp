@@ -10,11 +10,8 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.diaryapp.Database.DbHandler;
 import com.diaryapp.databinding.ActivityMainBinding;
 import com.google.android.material.snackbar.Snackbar;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,28 +33,6 @@ public class MainActivity extends AppCompatActivity {
         binding.fab.setOnClickListener(view -> Snackbar.make(view, "Добавляется новое событие", Snackbar.LENGTH_LONG)
                 .setAnchorView(R.id.fab)
                 .setAction("Action", null).show());
-
-        // Используйте try-catch для обработки исключений
-        try {
-            DbHandler dbHandler = new DbHandler(this);
-
-            // Добавьте группу
-            dbHandler.addGroup("New Group");
-            dbHandler.deleteGroup("NewGroup");
-
-            // Получите названия всех групп
-            List<String> groupNames = dbHandler.getAllGroups();
-
-            // Выведите в консоль или LogCat
-            System.out.println("Number of groups: " + groupNames.size());
-            for (String groupName : groupNames) {
-                System.out.println("Group Name: " + groupName);
-            }
-        } catch (Exception e) {
-            // Выведите сообщение об ошибке в консоль или LogCat
-            e.printStackTrace();
-        }
-
     }
 
     @Override
