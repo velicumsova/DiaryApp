@@ -1,10 +1,8 @@
 package com.diaryapp;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -13,7 +11,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.diaryapp.Database.DbHandler;
-
 import com.diaryapp.databinding.ActivityMainBinding;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -40,36 +37,39 @@ public class MainActivity extends AppCompatActivity {
                 .setAnchorView(R.id.fab)
                 .setAction("Action", null).show());
 
-        // Пример использования DbHandler в активности
-        DbHandler dbHandler = new DbHandler(this);
+        // Используйте try-catch для обработки исключений
+        try {
+            DbHandler dbHandler = new DbHandler(this);
 
-        // Получение названий всех групп
-        List<String> groupNames = dbHandler.getAllGroupNames();
-        System.out.println(groupNames.size());
-        // Вывод названий групп в консоль или Toast
-        for (String groupName : groupNames) {
-            System.out.println(groupName);
+            // Добавьте группу
+            dbHandler.addGroup("New Group");
+            dbHandler.deleteGroup("NewGroup");
+
+            // Получите названия всех групп
+            List<String> groupNames = dbHandler.getAllGroups();
+
+            // Выведите в консоль или LogCat
+            System.out.println("Number of groups: " + groupNames.size());
+            for (String groupName : groupNames) {
+                System.out.println("Group Name: " + groupName);
+            }
+        } catch (Exception e) {
+            // Выведите сообщение об ошибке в консоль или LogCat
+            e.printStackTrace();
         }
-        // Закрываем DbHandler после использования
-        dbHandler.close();
 
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
