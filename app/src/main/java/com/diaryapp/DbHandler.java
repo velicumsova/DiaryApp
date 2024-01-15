@@ -10,7 +10,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.diaryapp.EventHandler.Event;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DbHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "events.db";
@@ -163,6 +165,26 @@ public class DbHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    // получить событие по ID
+    public Event getEventById(int eventId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Event event = null;
+
+        Cursor cursor = db.query("events", null, "event_id = ?", new String[]{String.valueOf(eventId)}, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            event = new Event(cursor);
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        db.close();
+
+        return event;
+    }
+
     // получить все события
     public List<Event> getAllEvents() {
         List<Event> events = new ArrayList<>();
@@ -203,6 +225,8 @@ public class DbHandler extends SQLiteOpenHelper {
         return events;
     }
 
+    // работа с календарём -----------------------------------------------
+
     // получить все события определенного дня (отсортированы по времени)
     public List<Event> getEventsByDay(String selectedDate) {
         List<Event> events = new ArrayList<>();
@@ -222,4 +246,32 @@ public class DbHandler extends SQLiteOpenHelper {
 
         return events;
     }
+
+    // получить количество событий для каждого дня определенного месяца
+    public Map<String, Integer> getEventAmountsForMonth(int year, int month) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Map<String, Integer> eventsMap = new HashMap<>();
+
+        @SuppressLint("DefaultLocale") String startOfMonth = String.format("%04d-%02d-01", year, month);
+        @SuppressLint("DefaultLocale") String endOfMonth = String.format("%04d-%02d-31", year, month);
+
+        Cursor cursor = db.rawQuery("SELECT event_date, COUNT(*) FROM events WHERE event_date BETWEEN ? AND ? GROUP BY event_date", new String[]{startOfMonth, endOfMonth});
+
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                String date = cursor.getString(0);
+                int eventCount = cursor.getInt(1);
+                eventsMap.put(date, eventCount);
+            } while (cursor.moveToNext());
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+
+        db.close();
+
+        return eventsMap;
+    }
+
 }
