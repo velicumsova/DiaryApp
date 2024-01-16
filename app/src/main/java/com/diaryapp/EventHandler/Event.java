@@ -88,6 +88,21 @@ public class Event {
         return eventColor;
     }
 
+
+    @SuppressLint("Range")
+    public Event() {
+        this.eventId = 0;
+        this.isClosed = false;
+        this.groupName = "None";
+        this.eventTitle = "Untitled";
+        this.eventDate = "2024-01-01";
+        this.eventType = 1;
+        this.eventStartTime = 1000;
+        this.eventEndTime = 2400;
+        this.eventColor = 1;
+    }
+
+
     // конструктор из данных напрямую
     public Event(boolean isClosed, String groupName, String eventTitle, String eventDate,
                  int eventType, int eventStartTime, int eventEndTime, int eventColor) {
@@ -115,7 +130,7 @@ public class Event {
         this.eventColor = cursor.getInt(cursor.getColumnIndex("event_color"));
     }
 
-    public void add(DbHandler db) {
+    public void save(DbHandler db) {
         db.addEvent(this);
     }
 

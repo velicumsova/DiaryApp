@@ -41,16 +41,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addEvent(View view) {
-        List<Event> events = db.getEventsForPeriod("2024-01-01", "2024-01-31");
+        Event event = new Event();
+        event.setTitle("New event");
 
-        for (Event event : events) {
-            System.out.println(event.getDate());
-        }
+        event.save(db);
 
-//        Snackbar.make(view, , Snackbar.LENGTH_LONG)
-//                .setAnchorView(R.id.fab)
-//                .setAction("Action", null).show();
-
+        Snackbar.make(view, event.getTitle(), Snackbar.LENGTH_LONG)
+                .setAnchorView(R.id.fab)
+                .setAction("Action", null).show();
     }
 
 

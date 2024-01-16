@@ -246,8 +246,8 @@ public class DbHandler extends SQLiteOpenHelper {
     // получить все события за определенный период
     public List<Event> getEventsForPeriod(String start, String end) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Log.d("YourTag", "Executing SQL query: SELECT * FROM events WHERE event_date BETWEEN ? AND ? GROUP BY event_date");
-        Cursor cursor = db.rawQuery("SELECT * FROM events WHERE event_date BETWEEN ? AND ? GROUP BY event_date", new String[]{start, end});
+        Log.d("YourTag", "Executing SQL query: SELECT * FROM events WHERE event_date BETWEEN ? AND ?");
+        Cursor cursor = db.rawQuery("SELECT * FROM events WHERE event_date BETWEEN ? AND ?", new String[]{start, end});
 
         List<Event> events = new ArrayList<>();
         if (cursor.moveToFirst()) {
@@ -265,6 +265,7 @@ public class DbHandler extends SQLiteOpenHelper {
         Log.d("YourTag", "Number of events retrieved: " + events.size());
         return events;
     }
+
 
 
 }
