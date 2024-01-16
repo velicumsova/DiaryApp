@@ -3,6 +3,7 @@ package com.diaryapp;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -10,11 +11,15 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.diaryapp.EventHandler.Event;
 import com.diaryapp.databinding.ActivityMainBinding;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
+    DbHandler db = new DbHandler(this);
     private AppBarConfiguration appBarConfiguration;
 
     @Override
@@ -30,10 +35,28 @@ public class MainActivity extends AppCompatActivity {
         appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        binding.fab.setOnClickListener(view -> Snackbar.make(view, "Добавляется новое событие", Snackbar.LENGTH_LONG)
-                .setAnchorView(R.id.fab)
-                .setAction("Action", null).show());
+        binding.fab.setOnClickListener(this::addEvent);
     }
+
+    private void addEvent(View view) {
+        db.addEvent(new Event("groupName", "eventTitle", "2024-01-16", 1, 1500, 1515, 3));
+
+        List<Event> events = db.getAllEvents();
+        StringBuilder eventIdsBuilder = new StringBuilder("Event IDs: ");
+        for (Event event : events) {
+            eventIdsBuilder.append(event.getEventId()).append(", ");
+        }
+
+        if (eventIdsBuilder.length() > 0) {
+            eventIdsBuilder.setLength(eventIdsBuilder.length() - 2);
+        }
+
+        Snackbar.make(view, eventIdsBuilder.toString(), Snackbar.LENGTH_LONG)
+                .setAnchorView(R.id.fab)
+                .setAction("Action", null).show();
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
