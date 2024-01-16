@@ -14,81 +14,84 @@ public class Event {
     private int eventEndTime;
     private int eventColor;
 
-    public int getEventId() {
-        return eventId;
-    }
-
-    public void setEventId(int eventId) {
+    // сеттеры
+    public void setId(int eventId) {
         this.eventId = eventId;
-    }
-
-    public boolean isClosed() {
-        return isClosed;
     }
 
     public void setClosed(boolean isClosed) {
         this.isClosed = isClosed;
     }
 
-    public String getGroupName() {
+    public void setGroup(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public void setTitle(String eventTitle) {
+        this.eventTitle = eventTitle;
+    }
+
+    public void setDate(String eventDate) {
+        this.eventDate = eventDate;
+    }
+
+    public void setType(int eventType) {
+        this.eventType = eventType;
+    }
+
+    public void setStartTime(int eventStartTime) {
+        this.eventStartTime = eventStartTime;
+    }
+
+    public void setEndTime(int eventEndTime) {
+        this.eventEndTime = eventEndTime;
+    }
+
+    public void setColor(int eventColor) {
+        this.eventColor = eventColor;
+    }
+
+    // геттеры
+    public int getId() {
+        return eventId;
+    }
+
+    public boolean isClosed() {
+        return isClosed;
+    }
+
+    public String getGroup() {
         return groupName;
     }
 
-    public void setGroupName(String groupName) {
-        this.groupName = groupName;
-    }
-
-    public String getEventTitle() {
+    public String getTitle() {
         return eventTitle;
     }
 
-    public void setEventTitle(String eventTitle) {
-        this.eventTitle = eventTitle;
-    }
-
-    public String getEventDate() {
+    public String getDate() {
         return eventDate;
     }
 
-    public void setEventDate(String eventDate) {
-        this.eventDate = eventDate;
-    }
-
-    public int getEventType() {
+    public int getType() {
         return eventType;
     }
 
-    public void setEventType(int eventType) {
-        this.eventType = eventType;
-    }
-
-    public int getEventStartTime() {
+    public int getStartTime() {
         return eventStartTime;
     }
 
-    public void setEventStartTime(int eventStartTime) {
-        this.eventStartTime = eventStartTime;
-    }
-
-    public int getEventEndTime() {
+    public int getEndTime() {
         return eventEndTime;
     }
 
-    public void setEventEndTime(int eventEndTime) {
-        this.eventEndTime = eventEndTime;
-    }
-
-    public int getEventColor() {
+    public int getColor() {
         return eventColor;
     }
 
-    public void setEventColor(int eventColor) {
-        this.eventColor = eventColor;
-    }
-
-    // дефолт
-    public Event(String groupName, String eventTitle, String eventDate,
+    // конструктор из данных напрямую
+    public Event(boolean isClosed, String groupName, String eventTitle, String eventDate,
                  int eventType, int eventStartTime, int eventEndTime, int eventColor) {
+        this.isClosed = isClosed;
         this.groupName = groupName;
         this.eventTitle = eventTitle;
         this.eventDate = eventDate;
@@ -98,10 +101,11 @@ public class Event {
         this.eventColor = eventColor;
     }
 
-    // из курсора базы данных
+    // конструктор из курсора базы данных
     @SuppressLint("Range")
     public Event(Cursor cursor) {
         this.eventId = cursor.getInt(cursor.getColumnIndex("event_id"));
+        this.isClosed = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_closed")));
         this.groupName = cursor.getString(cursor.getColumnIndex("group_name"));
         this.eventTitle = cursor.getString(cursor.getColumnIndex("event_title"));
         this.eventDate = cursor.getString(cursor.getColumnIndex("event_date"));
@@ -111,7 +115,15 @@ public class Event {
         this.eventColor = cursor.getInt(cursor.getColumnIndex("event_color"));
     }
 
-    // пустой
-    public Event() {
+    public void add(DbHandler db) {
+        db.addEvent(this);
+    }
+
+    public void update(DbHandler db) {
+        db.updateEvent(this);
+    }
+
+    public void delete(DbHandler db) {
+        db.deleteEvent(this);
     }
 }

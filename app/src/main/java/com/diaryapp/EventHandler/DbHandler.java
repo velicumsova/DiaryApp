@@ -1,4 +1,4 @@
-package com.diaryapp;
+package com.diaryapp.EventHandler;
 
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
@@ -6,13 +6,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
-import com.diaryapp.EventHandler.Event;
+import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DbHandler extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "events.db";
@@ -26,7 +23,7 @@ public class DbHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String createTableQuery = "CREATE TABLE events (" +
                 "event_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "is_closed BOOL," +
+                "is_closed BOOLEAN," +
                 "group_name TEXT," +
                 "event_title TEXT," +
                 "event_date DATE," +
@@ -115,19 +112,19 @@ public class DbHandler extends SQLiteOpenHelper {
     public void addEvent(Event event) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        if (!doesGroupExist(event.getGroupName(), db)) {
-            addGroup(event.getGroupName());
+        if (!doesGroupExist(event.getGroup(), db)) {
+            addGroup(event.getGroup());
         }
 
         ContentValues values = new ContentValues();
         values.put("is_closed", event.isClosed());
-        values.put("group_name", event.getGroupName());
-        values.put("event_title", event.getEventTitle());
-        values.put("event_date", event.getEventDate());
-        values.put("event_type", event.getEventType());
-        values.put("event_start_time", event.getEventStartTime());
-        values.put("event_end_time", event.getEventEndTime());
-        values.put("event_color", event.getEventColor());
+        values.put("group_name", event.getGroup());
+        values.put("event_title", event.getTitle());
+        values.put("event_date", event.getDate());
+        values.put("event_type", event.getType());
+        values.put("event_start_time", event.getStartTime());
+        values.put("event_end_time", event.getEndTime());
+        values.put("event_color", event.getColor());
 
         db.insert("events", null, values);
         db.close();
@@ -143,7 +140,7 @@ public class DbHandler extends SQLiteOpenHelper {
     public void deleteEvent(Event event) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.delete("events", "event_id=?", new String[]{String.valueOf(event.getEventId())});
+        db.delete("events", "event_id=?", new String[]{String.valueOf(event.getId())});
         db.close();
     }
 
@@ -153,15 +150,15 @@ public class DbHandler extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put("is_closed", updatedEvent.isClosed());
-        values.put("group_name", updatedEvent.getGroupName());
-        values.put("event_title", updatedEvent.getEventTitle());
-        values.put("event_date", updatedEvent.getEventDate());
-        values.put("event_type", updatedEvent.getEventType());
-        values.put("event_start_time", updatedEvent.getEventStartTime());
-        values.put("event_end_time", updatedEvent.getEventEndTime());
-        values.put("event_color", updatedEvent.getEventColor());
+        values.put("group_name", updatedEvent.getGroup());
+        values.put("event_title", updatedEvent.getTitle());
+        values.put("event_date", updatedEvent.getDate());
+        values.put("event_type", updatedEvent.getType());
+        values.put("event_start_time", updatedEvent.getStartTime());
+        values.put("event_end_time", updatedEvent.getEndTime());
+        values.put("event_color", updatedEvent.getColor());
 
-        db.update("events", values, "event_id=?", new String[]{String.valueOf(updatedEvent.getEventId())});
+        db.update("events", values, "event_id=?", new String[]{String.valueOf(updatedEvent.getId())});
         db.close();
     }
 
@@ -228,12 +225,11 @@ public class DbHandler extends SQLiteOpenHelper {
     // работа с календарём -----------------------------------------------
 
     // получить все события определенного дня (отсортированы по времени)
-    public List<Event> getEventsByDay(String selectedDate) {
-        List<Event> events = new ArrayList<>();
-
+    public List<Event> getEventsForDay(String date) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM events WHERE event_date = ? ORDER BY event_start_time", new String[]{selectedDate});
+        Cursor cursor = db.rawQuery("SELECT * FROM events WHERE event_date = ? ORDER BY event_start_time", new String[]{date});
 
+        List<Event> events = new ArrayList<>();
         if (cursor.moveToFirst()) {
             do {
                 Event event = new Event(cursor);
@@ -247,31 +243,28 @@ public class DbHandler extends SQLiteOpenHelper {
         return events;
     }
 
-    // получить количество событий для каждого дня определенного месяца
-    public Map<String, Integer> getEventAmountsForMonth(int year, int month) {
+    // получить все события за определенный период
+    public List<Event> getEventsForPeriod(String start, String end) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Map<String, Integer> eventsMap = new HashMap<>();
+        Log.d("YourTag", "Executing SQL query: SELECT * FROM events WHERE event_date BETWEEN ? AND ? GROUP BY event_date");
+        Cursor cursor = db.rawQuery("SELECT * FROM events WHERE event_date BETWEEN ? AND ? GROUP BY event_date", new String[]{start, end});
 
-        @SuppressLint("DefaultLocale") String startOfMonth = String.format("%04d-%02d-01", year, month);
-        @SuppressLint("DefaultLocale") String endOfMonth = String.format("%04d-%02d-31", year, month);
-
-        Cursor cursor = db.rawQuery("SELECT event_date, COUNT(*) FROM events WHERE event_date BETWEEN ? AND ? GROUP BY event_date", new String[]{startOfMonth, endOfMonth});
-
-        if (cursor != null && cursor.moveToFirst()) {
+        List<Event> events = new ArrayList<>();
+        if (cursor.moveToFirst()) {
             do {
-                String date = cursor.getString(0);
-                int eventCount = cursor.getInt(1);
-                eventsMap.put(date, eventCount);
+                Event event = new Event(cursor);
+                events.add(event);
             } while (cursor.moveToNext());
+        } else {
+            Log.d("YourTag", "No events found for the specified period.");
         }
 
-        if (cursor != null) {
-            cursor.close();
-        }
-
+        cursor.close();
         db.close();
 
-        return eventsMap;
+        Log.d("YourTag", "Number of events retrieved: " + events.size());
+        return events;
     }
+
 
 }

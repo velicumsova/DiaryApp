@@ -11,7 +11,9 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.diaryapp.EventHandler.DbHandler;
 import com.diaryapp.EventHandler.Event;
+import com.diaryapp.EventHandler.EventCalendar;
 import com.diaryapp.databinding.ActivityMainBinding;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -39,21 +41,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addEvent(View view) {
-        db.addEvent(new Event("groupName", "eventTitle", "2024-01-16", 1, 1500, 1515, 3));
+        List<Event> events = db.getEventsForPeriod("2024-01-01", "2024-01-31");
 
-        List<Event> events = db.getAllEvents();
-        StringBuilder eventIdsBuilder = new StringBuilder("Event IDs: ");
         for (Event event : events) {
-            eventIdsBuilder.append(event.getEventId()).append(", ");
+            System.out.println(event.getDate());
         }
 
-        if (eventIdsBuilder.length() > 0) {
-            eventIdsBuilder.setLength(eventIdsBuilder.length() - 2);
-        }
-
-        Snackbar.make(view, eventIdsBuilder.toString(), Snackbar.LENGTH_LONG)
-                .setAnchorView(R.id.fab)
-                .setAction("Action", null).show();
+//        Snackbar.make(view, , Snackbar.LENGTH_LONG)
+//                .setAnchorView(R.id.fab)
+//                .setAction("Action", null).show();
 
     }
 
