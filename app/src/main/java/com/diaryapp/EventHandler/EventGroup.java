@@ -21,21 +21,20 @@ public class EventGroup {
     }
 
     public void save(DbHandler db) {
-        if (db != null) {
-            db.addGroup(this.name);
-        }
+        db.addGroup(this.name);
     }
 
     public void update(DbHandler db, String newName) {
-        if (db != null) {
-            db.updateGroup(this.name, newName);
-        }
+        db.updateGroup(this.name, newName);
     }
 
     public void delete(DbHandler db) {
-        if (db != null) {
-            db.deleteGroup(this.name);
-        }
+        db.deleteGroup(this.name);
+    }
+
+    public void addEvent (DbHandler db, Event event) {
+        event.setGroup(this.name);
+        event.update(db);
     }
 
     public List<Event> getAllEvents (DbHandler db) {
