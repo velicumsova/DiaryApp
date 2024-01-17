@@ -131,14 +131,24 @@ public class Event {
     }
 
     public void save(DbHandler db) {
-        db.addEvent(this);
+        if (db != null) {
+            db.addEvent(this);
+        }
     }
 
     public void update(DbHandler db) {
-        db.updateEvent(this);
+        if (db != null) {
+            db.updateEvent(this);
+        }
     }
 
     public void delete(DbHandler db) {
-        db.deleteEvent(this);
+        if (db != null) {
+            db.deleteEvent(this);
+        }
+    }
+
+    public static Event getById(DbHandler db, int Id) {
+        return db.getEventById(Id);
     }
 }

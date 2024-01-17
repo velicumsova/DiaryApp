@@ -12,13 +12,25 @@ public class EventCalendar {
         return db.getEventsForDay(date);
     }
 
-    public static List<Event> getEventAmountsForMonth (DbHandler db, int year, int month) {
+    public static List<Event> getEventsForMonth (DbHandler db, int year, int month) {
         @SuppressLint("DefaultLocale") String start = String.format("%04d-%02d-01", year, month);
         @SuppressLint("DefaultLocale") String end = String.format("%04d-%02d-31", year, month);
 
-        List<Event> events = db.getEventsForPeriod(start, end);
-        List<Integer> amounts = new ArrayList<>();
+        return db.getEventsForPeriod(start, end);
+    }
 
-        return events;
+    public static List<Event> getAllEvents (DbHandler db) {
+        return db.getAllEvents();
+    }
+
+    public static List<EventGroup> getAllGroups (DbHandler db) {
+        List<String> groupNames = db.getAllGroups();
+
+        List<EventGroup> groups = new ArrayList<>();
+
+        for (String groupName: groupNames) {
+            groups.add(new EventGroup(groupName));
+        }
+        return groups;
     }
 }

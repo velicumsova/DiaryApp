@@ -17,9 +17,8 @@ import com.diaryapp.EventHandler.EventCalendar;
 import com.diaryapp.databinding.ActivityMainBinding;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
+    private int i = 0;
 
     DbHandler db = new DbHandler(this);
     private AppBarConfiguration appBarConfiguration;
@@ -41,14 +40,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addEvent(View view) {
-        Event event = new Event();
-        event.setTitle("New event");
-
-        event.save(db);
-
-        Snackbar.make(view, event.getTitle(), Snackbar.LENGTH_LONG)
-                .setAnchorView(R.id.fab)
-                .setAction("Action", null).show();
+//        Event event = new Event();
+//        event.setTitle("Event " + i);
+//
+//        event.save(db);
+//
+//        Snackbar.make(view, "Added " + event.getTitle(), Snackbar.LENGTH_LONG)
+//                .setAnchorView(R.id.fab)
+//                .setAction("Action", null).show();
+//
+//        System.out.println(EventCalendar.getEventAmountsForMonth(db, 2024, 1).size());
+//        for (Event e:
+//             EventCalendar.getEventAmountsForMonth(db, 2024, 1)) {
+//            System.out.print(e.getTitle() + " ");
+//        }
+//        i++;
     }
 
 
@@ -65,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
