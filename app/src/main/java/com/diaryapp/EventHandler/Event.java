@@ -3,7 +3,13 @@ package com.diaryapp.EventHandler;
 import android.annotation.SuppressLint;
 import android.database.Cursor;
 
+import com.diaryapp.EventHandler.DB.DbHandler;
+
+/**
+ * Класс для управления определенным событием.
+ */
 public class Event {
+
     private int eventId;
     private boolean isClosed;
     private String groupName;
@@ -88,7 +94,9 @@ public class Event {
         return eventColor;
     }
 
-
+    /**
+     * Конструктор события по умолчанию.
+     */
     @SuppressLint("Range")
     public Event() {
         this.eventId = 0;
@@ -103,7 +111,17 @@ public class Event {
     }
 
 
-    // конструктор из данных напрямую
+    /**
+     * Конструктор из данных напрямую.
+     * @param isClosed закрыто ли событие.
+     * @param groupName название группы.
+     * @param eventTitle имя события.
+     * @param eventDate дата события.
+     * @param eventType тип события (0 - простое, 1 - продолжительное).
+     * @param eventStartTime время начала.
+     * @param eventEndTime время конца.
+     * @param eventColor цвет.
+     */
     public Event(boolean isClosed, String groupName, String eventTitle, String eventDate,
                  int eventType, int eventStartTime, int eventEndTime, int eventColor) {
         this.isClosed = isClosed;
@@ -116,7 +134,10 @@ public class Event {
         this.eventColor = eventColor;
     }
 
-    // конструктор из курсора базы данных
+    /**
+     * Конструктор из курсора базы данных.
+     * @param cursor - курсор базы данных.
+     */
     @SuppressLint("Range")
     public Event(Cursor cursor) {
         this.eventId = cursor.getInt(cursor.getColumnIndex("event_id"));
@@ -130,19 +151,36 @@ public class Event {
         this.eventColor = cursor.getInt(cursor.getColumnIndex("event_color"));
     }
 
+    /**
+     * Метод для получения события из базы данных по ID.
+     * @param db объект DbHandler.
+     * @return объект Event.
+     */
+    public static Event getById(DbHandler db, int Id) {
+        return db.getEventById(Id);
+    }
+
+    /**
+     * Метод для добавления события в базу данных.
+     * @param db объект DbHandler.
+     */
     public void save(DbHandler db) {
         db.addEvent(this);
     }
 
+    /**
+     * Метод для обновления информации о событии.
+     * @param db объект DbHandler.
+     */
     public void update(DbHandler db) {
         db.updateEvent(this);
     }
 
+    /**
+     * Метод для удаления события из базы данных.
+     * @param db объект DbHandler.
+     */
     public void delete(DbHandler db) {
         db.deleteEvent(this);
-    }
-
-    public static Event getById(DbHandler db, int Id) {
-        return db.getEventById(Id);
     }
 }
