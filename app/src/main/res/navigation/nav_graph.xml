@@ -9,7 +9,7 @@
         android:id="@+id/FirstFragment"
         android:name="com.diaryapp.FirstFragment"
         android:label="@string/head_label_calendar"
-        tools:layout="@layout/fragment_first">
+        tools:layout="@layout/calendar">
 
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
