@@ -18,6 +18,11 @@ import com.google.android.material.snackbar.Snackbar;
 public class MainActivity extends AppCompatActivity {
     private int i = 0;
 
+    String[] colores = {
+            "rojo","verde","amarillo","azul","negro","rosa","blanco","morado","cafe"
+    };
+
+
     DbHandler db = new DbHandler(this);
     private AppBarConfiguration appBarConfiguration;
 

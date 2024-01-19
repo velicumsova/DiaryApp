@@ -13,7 +13,7 @@
         android:theme="@style/Theme.DiaryApp"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity"
+            android:name=".CalendarWindow"
             android:exported="true"
             android:theme="@style/Theme.DiaryApp">
             <intent-filter>
