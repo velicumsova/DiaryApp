@@ -51,7 +51,7 @@
     </LinearLayout>
 
     <CalendarView
-        android:id="@+id/calendarView2"
+        android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="320dp"
         android:background="@drawable/layout_bg"
