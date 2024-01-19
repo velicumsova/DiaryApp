@@ -107,7 +107,7 @@ public class Event {
         this.eventType = 1;
         this.eventStartTime = 1000;
         this.eventEndTime = 2400;
-        this.eventColor = 1;
+        this.eventColor = 0xFFFF7676;
     }
 
 
@@ -136,7 +136,7 @@ public class Event {
 
     /**
      * Конструктор из курсора базы данных.
-     * @param cursor - курсор базы данных.
+     * @param cursor курсор базы данных.
      */
     @SuppressLint("Range")
     public Event(Cursor cursor) {

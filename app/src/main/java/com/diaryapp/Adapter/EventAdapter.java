@@ -1,5 +1,6 @@
 package com.diaryapp.Adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.diaryapp.EventHandler.DB.DbHandler;
 import com.diaryapp.EventHandler.Event;
 import com.diaryapp.R;
 
@@ -20,17 +20,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     private final Context context;
     private List<Event> events;
-    private DbHandler dbHandler; // Add this member variable
-
-    public EventAdapter(Context context, DbHandler dbHandler) {
-        this.context = context;
-        this.dbHandler = dbHandler;
-    }
 
     public EventAdapter(Context context) {
         this.context = context;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setEvents(List<Event> events) {
         this.events = events;
         notifyDataSetChanged();
@@ -67,7 +62,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         return events != null ? events.size() : 0;
     }
 
-    public class EventViewHolder extends RecyclerView.ViewHolder {
+    public static class EventViewHolder extends RecyclerView.ViewHolder {
 
         private CheckBox todoCheckBox;
         private TextView textViewTime;
