@@ -70,6 +70,9 @@ public class CalendarWindow extends AppCompatActivity {
 
         // Добавление декоратора событий
         calendarView.addDecorator(new EventDecorator(this, dbHandler));
+
+        // Обновление декоратора
+        calendarView.invalidateDecorators();
     }
 
     @Override
