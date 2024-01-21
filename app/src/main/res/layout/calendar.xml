@@ -28,7 +28,7 @@
             android:layout_weight="1"
             android:background="#FFFFFF"
             android:contentDescription="сортировка"
-            android:src="@mipmap/sort" />
+            android:src="@drawable/sort" />
 
         <TextView
             android:id="@+id/textView"
@@ -47,7 +47,7 @@
             android:layout_weight="1"
             android:background="#FFFFFF"
             android:contentDescription="фильтрация"
-            android:src="@mipmap/filter" />
+            android:src="@drawable/filter" />
     </LinearLayout>
 
     <com.prolificinteractive.materialcalendarview.MaterialCalendarView
@@ -115,7 +115,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
-            android:src="@mipmap/add"
+            android:src="@drawable/add"
             android:tint="#FFFFFF"
             app:backgroundTint="#BC81B6"
             app:layout_constraintBottom_toBottomOf="parent"
