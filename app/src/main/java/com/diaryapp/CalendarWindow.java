@@ -3,12 +3,17 @@ package com.diaryapp;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.CalendarView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+
+import java.util.Collections;
+import java.util.Comparator;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,7 +34,11 @@ public class CalendarWindow extends AppCompatActivity {
     private EventAdapter eventAdapter;
     private DbHandler dbHandler;
     private List<Event> eventList;
+
+    private List<Event> originalEventList;
     private MaterialCalendarView calendarView;
+
+    private boolean isSortingAlphabeticallyEnabled = false;
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -50,6 +59,25 @@ public class CalendarWindow extends AppCompatActivity {
         eventAdapter = new EventAdapter(this);
         tasksRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         tasksRecyclerView.setAdapter(eventAdapter);
+
+        // Set the OnEventClickListener
+        eventAdapter.setOnEventClickListener(event -> {
+            // Placeholder method for now, replace with your logic
+            onEventClick(event);
+        });
+
+        ImageButton sortButton = findViewById(R.id.imageButton);
+        sortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Переключение состояния сортировки
+                isSortingAlphabeticallyEnabled = !isSortingAlphabeticallyEnabled;
+
+                // Вызывайте метод для сортировки событий по алфавиту (если сортировка включена)
+                sortEventsAlphabetically();
+            }
+        });
+
 
         // Обработчик выбора даты в CalendarView
         calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
@@ -76,6 +104,11 @@ public class CalendarWindow extends AppCompatActivity {
         calendarView.invalidateDecorators();
     }
 
+    private void onEventClick(Event event) {
+        // заглушка
+        System.out.println("Вы нажали на событие: " + event.getTitle());
+    }
+
     @Override
     protected void onDestroy() {
         // Закрываем базу данных при уничтожении активности
@@ -94,6 +127,8 @@ public class CalendarWindow extends AppCompatActivity {
         // Загрузка событий на выбранную дату
         List<Event> eventsForDay = dbHandler.getEventsForDay(selectedDate);
         eventList.addAll(eventsForDay);
+        // Создайте копию списка для оригинального порядка
+        originalEventList = new ArrayList<>(eventList);
 
         // Обновление RecyclerView через адаптер
         eventAdapter.setEvents(eventList);
@@ -106,6 +141,26 @@ public class CalendarWindow extends AppCompatActivity {
 
         // После обновления RecyclerView и текста с датой, вызовите notifyDataSetChanged
         // Это гарантирует, что RecyclerView обновится, включая состояние CheckBox
+        eventAdapter.notifyDataSetChanged();
+    }
+
+    private void sortEventsAlphabetically() {
+        if (isSortingAlphabeticallyEnabled) {
+            // Используйте компаратор для сортировки событий по алфавиту
+            Collections.sort(eventList, new Comparator<Event>() {
+                @Override
+                public int compare(Event event1, Event event2) {
+                    return event1.getTitle().compareToIgnoreCase(event2.getTitle());
+                }
+            });
+        } else {
+            // Восстановите оригинальный порядок событий
+            eventList.clear();
+            eventList.addAll(originalEventList);
+        }
+
+        // Обновите RecyclerView через адаптер после сортировки или восстановления порядка
+        eventAdapter.setEvents(eventList);
         eventAdapter.notifyDataSetChanged();
     }
 
@@ -139,7 +194,7 @@ public class CalendarWindow extends AppCompatActivity {
 
             //все цвета из макета фигмы
             // FC7A7A - красный
-            //  FCA97A - оранжевый
+            // FCA97A - оранжевый
             // FCDF7A - желтый
             // 7AFC8F - зеленый
             // 7ADDFC - голубой

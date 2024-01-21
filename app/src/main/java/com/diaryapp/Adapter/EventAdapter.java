@@ -21,10 +21,19 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     private final Context context;
     private List<Event> events;
+    private OnEventClickListener onEventClickListener;
 
 
     public EventAdapter(Context context) {
         this.context = context;
+    }
+
+    public interface OnEventClickListener {
+        void onEventClick(Event event);
+    }
+
+    public void setOnEventClickListener(OnEventClickListener listener) {
+        this.onEventClickListener = listener;
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -60,6 +69,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             // Update the isClosed property when the checkbox state changes
             event.setClosed(isChecked);
             // Optionally, you can save the updated event in the database here
+        });
+
+        holder.itemView.setOnClickListener(v -> {
+            if (onEventClickListener != null) {
+                onEventClickListener.onEventClick(event);
+            }
         });
     }
 
@@ -114,8 +129,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                         " - " +
                         endTimeStr.substring(0, 2) + ":" + endTimeStr.substring(2);
             }
-
-            // Default case, return an empty string or handle other types as needed
             return "";
         }
     }
