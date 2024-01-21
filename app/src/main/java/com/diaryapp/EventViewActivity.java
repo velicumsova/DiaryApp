@@ -23,7 +23,7 @@ public class EventViewActivity extends AppCompatActivity {
         LinearLayout eventCardBackground = findViewById(R.id.eventCardBackground);
         LinearLayout eventCardHeader = findViewById(R.id.eventCardHeader);
         TextView eventName = findViewById(R.id.eventName);
-        CheckBox checkBox = findViewById(R.id.closeBox);
+        CheckBox closeBox = findViewById(R.id.closeBox);
         TextView eventDate = findViewById(R.id.eventDate);
         TextView eventTime = findViewById(R.id.eventTime);
         ImageButton editButton = findViewById(R.id.editButton);
@@ -33,6 +33,7 @@ public class EventViewActivity extends AppCompatActivity {
 
         // bind elements
         returnButton.setOnClickListener(view -> onReturnClick());
+        closeBox.setOnClickListener(view -> onCloseClick());
         editButton.setOnClickListener(view -> onEditClick());
         deleteButton.setOnClickListener(view -> onDeleteClick());
     }
@@ -48,9 +49,12 @@ public class EventViewActivity extends AppCompatActivity {
     private void onEditClick() {
         System.out.println("editing event...");
     }
-
+    private void onCloseClick() {
+        System.out.println("closing event...");
+    }
     private void onDeleteClick() {
         System.out.println("deleting event...");
+        this.onReturnClick();
     }
 }
 
