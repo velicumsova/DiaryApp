@@ -1,16 +1,23 @@
 package com.diaryapp;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.CalendarView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
+import java.util.Collections;
+import java.util.Comparator;
+
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +36,8 @@ public class CalendarWindow extends AppCompatActivity {
     private EventAdapter eventAdapter;
     private DbHandler dbHandler;
     private List<Event> eventList;
+
+    private List<Event> originalEventList;
     private MaterialCalendarView calendarView;
 
     @SuppressLint("DefaultLocale")
@@ -50,6 +59,21 @@ public class CalendarWindow extends AppCompatActivity {
         eventAdapter = new EventAdapter(this);
         tasksRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         tasksRecyclerView.setAdapter(eventAdapter);
+
+        // Set the OnEventClickListener
+        eventAdapter.setOnEventClickListener(event -> {
+            // Placeholder method for now, replace with your logic
+            onEventClick(event);
+        });
+
+        ImageButton sortButton = findViewById(R.id.imageButton);
+        sortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSortOptionsDialog();
+            }
+        });
+
 
         // Обработчик выбора даты в CalendarView
         calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
@@ -76,6 +100,50 @@ public class CalendarWindow extends AppCompatActivity {
         calendarView.invalidateDecorators();
     }
 
+    private void showSortOptionsDialog() {
+        // Список вариантов сортировки
+        final CharSequence[] options = {"По алфавиту", "По продолжительности", "Сбросить сортировку"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Выберите тип сортировки");
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Обработка выбора пользователя
+                switch (which) {
+                    case 0:
+                        // По алфавиту
+                        sortEventsAlphabetically();
+                        break;
+                    case 1:
+                        // По продолжительности
+                        sortEventsByDuration();
+                        break;
+                    case 2:
+                        // Сбросить сортировку
+                        resetSort();
+                        break;
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void resetSort() {
+        // Восстановление оригинального порядка
+        eventList.clear();
+        eventList.addAll(originalEventList);
+
+        // Обновите RecyclerView через адаптер после сброса сортировки
+        eventAdapter.setEvents(eventList);
+        eventAdapter.notifyDataSetChanged();
+    }
+
+    private void onEventClick(Event event) {
+        // заглушка
+        System.out.println("Вы нажали на событие: " + event.getTitle());
+    }
+
     @Override
     protected void onDestroy() {
         // Закрываем базу данных при уничтожении активности
@@ -94,6 +162,8 @@ public class CalendarWindow extends AppCompatActivity {
         // Загрузка событий на выбранную дату
         List<Event> eventsForDay = dbHandler.getEventsForDay(selectedDate);
         eventList.addAll(eventsForDay);
+        // Создайте копию списка для оригинального порядка
+        originalEventList = new ArrayList<>(eventList);
 
         // Обновление RecyclerView через адаптер
         eventAdapter.setEvents(eventList);
@@ -104,8 +174,36 @@ public class CalendarWindow extends AppCompatActivity {
         // Обновление декоратора
         calendarView.invalidateDecorators();
 
-        // После обновления RecyclerView и текста с датой, вызовите notifyDataSetChanged
-        // Это гарантирует, что RecyclerView обновится, включая состояние CheckBox
+        eventAdapter.notifyDataSetChanged();
+    }
+
+    private void sortEventsAlphabetically() {
+        // сортировка по алфавиту
+        Collections.sort(eventList, new Comparator<Event>() {
+            @Override
+            public int compare(Event event1, Event event2) {
+                return event1.getTitle().compareToIgnoreCase(event2.getTitle());
+            }
+        });
+
+        // Обновите RecyclerView через адаптер после сортировки или восстановления порядка
+        eventAdapter.setEvents(eventList);
+        eventAdapter.notifyDataSetChanged();
+    }
+
+    private void sortEventsByDuration() {
+        Collections.sort(eventList, new Comparator<Event>() {
+            @Override
+            public int compare(Event event1, Event event2) {
+                // Сравнение по продолжительности (разнице между временами начала и конца) в обратном порядке
+                int duration1 = event1.getEndTime() - event1.getStartTime();
+                int duration2 = event2.getEndTime() - event2.getStartTime();
+                return Integer.compare(duration2, duration1);
+            }
+        });
+
+        // Обновите RecyclerView через адаптер после сортировки
+        eventAdapter.setEvents(eventList);
         eventAdapter.notifyDataSetChanged();
     }
 
@@ -131,15 +229,15 @@ public class CalendarWindow extends AppCompatActivity {
             Event newEvent = new Event();
             newEvent.setDate(currentDate);
 
-            newEvent.setTitle("Начальница");
+            newEvent.setTitle("День дня");
             newEvent.setStartTime(1200);
-            newEvent.setEndTime(1300);
+            newEvent.setEndTime(2300);
             newEvent.setType(1);
-            newEvent.setColor(Color.parseColor("#7AFC8F"));
+            newEvent.setColor(Color.parseColor("#7A97FC"));
 
             //все цвета из макета фигмы
             // FC7A7A - красный
-            //  FCA97A - оранжевый
+            // FCA97A - оранжевый
             // FCDF7A - желтый
             // 7AFC8F - зеленый
             // 7ADDFC - голубой
