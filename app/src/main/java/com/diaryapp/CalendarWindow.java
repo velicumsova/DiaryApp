@@ -1,6 +1,7 @@
 package com.diaryapp;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +17,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -37,8 +39,6 @@ public class CalendarWindow extends AppCompatActivity {
 
     private List<Event> originalEventList;
     private MaterialCalendarView calendarView;
-
-    private boolean isSortingAlphabeticallyEnabled = false;
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -70,11 +70,7 @@ public class CalendarWindow extends AppCompatActivity {
         sortButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Переключение состояния сортировки
-                isSortingAlphabeticallyEnabled = !isSortingAlphabeticallyEnabled;
-
-                // Вызывайте метод для сортировки событий по алфавиту (если сортировка включена)
-                sortEventsAlphabetically();
+                showSortOptionsDialog();
             }
         });
 
@@ -102,6 +98,45 @@ public class CalendarWindow extends AppCompatActivity {
 
         // Обновление декоратора
         calendarView.invalidateDecorators();
+    }
+
+    private void showSortOptionsDialog() {
+        // Список вариантов сортировки
+        final CharSequence[] options = {"По алфавиту", "По продолжительности", "Сбросить сортировку"};
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Выберите тип сортировки");
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Обработка выбора пользователя
+                switch (which) {
+                    case 0:
+                        // По алфавиту
+                        sortEventsAlphabetically();
+                        break;
+                    case 1:
+                        // По продолжительности
+                        sortEventsByDuration();
+                        break;
+                    case 2:
+                        // Сбросить сортировку
+                        resetSort();
+                        break;
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void resetSort() {
+        // Восстановление оригинального порядка
+        eventList.clear();
+        eventList.addAll(originalEventList);
+
+        // Обновите RecyclerView через адаптер после сброса сортировки
+        eventAdapter.setEvents(eventList);
+        eventAdapter.notifyDataSetChanged();
     }
 
     private void onEventClick(Event event) {
@@ -139,27 +174,35 @@ public class CalendarWindow extends AppCompatActivity {
         // Обновление декоратора
         calendarView.invalidateDecorators();
 
-        // После обновления RecyclerView и текста с датой, вызовите notifyDataSetChanged
-        // Это гарантирует, что RecyclerView обновится, включая состояние CheckBox
         eventAdapter.notifyDataSetChanged();
     }
 
     private void sortEventsAlphabetically() {
-        if (isSortingAlphabeticallyEnabled) {
-            // Используйте компаратор для сортировки событий по алфавиту
-            Collections.sort(eventList, new Comparator<Event>() {
-                @Override
-                public int compare(Event event1, Event event2) {
-                    return event1.getTitle().compareToIgnoreCase(event2.getTitle());
-                }
-            });
-        } else {
-            // Восстановите оригинальный порядок событий
-            eventList.clear();
-            eventList.addAll(originalEventList);
-        }
+        // сортировка по алфавиту
+        Collections.sort(eventList, new Comparator<Event>() {
+            @Override
+            public int compare(Event event1, Event event2) {
+                return event1.getTitle().compareToIgnoreCase(event2.getTitle());
+            }
+        });
 
         // Обновите RecyclerView через адаптер после сортировки или восстановления порядка
+        eventAdapter.setEvents(eventList);
+        eventAdapter.notifyDataSetChanged();
+    }
+
+    private void sortEventsByDuration() {
+        Collections.sort(eventList, new Comparator<Event>() {
+            @Override
+            public int compare(Event event1, Event event2) {
+                // Сравнение по продолжительности (разнице между временами начала и конца) в обратном порядке
+                int duration1 = event1.getEndTime() - event1.getStartTime();
+                int duration2 = event2.getEndTime() - event2.getStartTime();
+                return Integer.compare(duration2, duration1);
+            }
+        });
+
+        // Обновите RecyclerView через адаптер после сортировки
         eventAdapter.setEvents(eventList);
         eventAdapter.notifyDataSetChanged();
     }
@@ -186,11 +229,11 @@ public class CalendarWindow extends AppCompatActivity {
             Event newEvent = new Event();
             newEvent.setDate(currentDate);
 
-            newEvent.setTitle("Начальница");
+            newEvent.setTitle("День дня");
             newEvent.setStartTime(1200);
-            newEvent.setEndTime(1300);
+            newEvent.setEndTime(2300);
             newEvent.setType(1);
-            newEvent.setColor(Color.parseColor("#7AFC8F"));
+            newEvent.setColor(Color.parseColor("#7A97FC"));
 
             //все цвета из макета фигмы
             // FC7A7A - красный
