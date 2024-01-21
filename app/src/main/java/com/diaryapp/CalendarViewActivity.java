@@ -2,10 +2,10 @@ package com.diaryapp;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CalendarView;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class CalendarWindow extends AppCompatActivity {
+public class CalendarViewActivity extends AppCompatActivity {
     private TextView tasksDateText;
     private EventAdapter eventAdapter;
     private DbHandler dbHandler;
@@ -140,9 +140,11 @@ public class CalendarWindow extends AppCompatActivity {
     }
 
     private void onEventClick(Event event) {
-        // заглушка
-        System.out.println("Вы нажали на событие: " + event.getTitle());
+        Intent intent = new Intent(this, EventViewActivity.class);
+        intent.putExtra("eventId", event.getId());
+        startActivity(intent);
     }
+
 
     @Override
     protected void onDestroy() {
