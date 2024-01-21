@@ -5,6 +5,11 @@ import android.os.Bundle;
 import android.widget.CalendarView;
 import android.widget.TextView;
 
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +28,7 @@ public class CalendarWindow extends AppCompatActivity {
     private EventAdapter eventAdapter;
     private DbHandler dbHandler;
     private List<Event> eventList;
+    private MaterialCalendarView calendarView;
 
     @SuppressLint("DefaultLocale")
     @Override
@@ -34,7 +40,7 @@ public class CalendarWindow extends AppCompatActivity {
         dbHandler = new DbHandler(this);
 
         // Инициализация виджетов
-        CalendarView calendarView = findViewById(R.id.calendarView);
+        this.calendarView = findViewById(R.id.сalendarView);
         tasksDateText = findViewById(R.id.tasksDateText);
         RecyclerView tasksRecyclerView = findViewById(R.id.tasksRecyclerView);
 
@@ -45,8 +51,14 @@ public class CalendarWindow extends AppCompatActivity {
         tasksRecyclerView.setAdapter(eventAdapter);
 
         // Обработчик выбора даты в CalendarView
-        calendarView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
-            updateEventList(String.format("%04d-%02d-%02d", year, month + 1, dayOfMonth));
+        calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+                if (selected) {
+                    // Обновление списка событий при выборе даты
+                    updateEventList(String.format("%04d-%02d-%02d", date.getYear(), date.getMonth() + 1, date.getDay()));
+                }
+            }
         });
 
         // Начальная загрузка событий для текущей даты
@@ -55,6 +67,12 @@ public class CalendarWindow extends AppCompatActivity {
         // В вашем методе инициализации активности или фрагмента
         FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.FAG);
         addButton.setOnClickListener(v -> addEvent());
+
+        // Добавление декоратора событий
+        calendarView.addDecorator(new EventDecorator(this, dbHandler));
+
+        // Обновление декоратора
+        calendarView.invalidateDecorators();
     }
 
     @Override
@@ -81,6 +99,9 @@ public class CalendarWindow extends AppCompatActivity {
 
         // Обновление текста с датой
         tasksDateText.setText(selectedDate);
+
+        // Обновление декоратора
+        calendarView.invalidateDecorators();
 
         // После обновления RecyclerView и текста с датой, вызовите notifyDataSetChanged
         // Это гарантирует, что RecyclerView обновится, включая состояние CheckBox
@@ -110,10 +131,7 @@ public class CalendarWindow extends AppCompatActivity {
             newEvent.setDate(currentDate);
             newEvent.save(dbHandler);
 
-            // Обновление RecyclerView через адаптер
-            eventAdapter.setEvents(eventList);
-
-            // Update the list for the selected date
+            // Обновление списка событий
             updateEventList(currentDate);
         } catch (Exception e) {
             e.printStackTrace();
