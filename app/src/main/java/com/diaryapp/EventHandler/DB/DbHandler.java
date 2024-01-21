@@ -129,6 +129,7 @@ public class DbHandler extends SQLiteOpenHelper {
         values.put("event_start_time", event.getStartTime());
         values.put("event_end_time", event.getEndTime());
         values.put("event_color", event.getColor());
+        values.put("event_text", event.getText());
 
         db.insert("events", null, values);
         db.close();

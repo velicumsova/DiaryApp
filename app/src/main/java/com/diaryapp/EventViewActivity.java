@@ -2,12 +2,12 @@ package com.diaryapp;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,13 +33,14 @@ public class EventViewActivity extends AppCompatActivity {
     private Event event;
     private LinearLayout eventCardHeader;
     private TextView eventName;
-    private CheckBox checkBox;
+    private CheckBox closeBox;
+    private ImageButton returnButton;
     private TextView eventDate;
     private TextView eventTime;
     private ImageButton editButton;
     private ImageButton deleteButton;
     private TextView eventGroup;
-    private EditText eventText;
+    private TextView eventText;
 
 
 
@@ -54,10 +55,10 @@ public class EventViewActivity extends AppCompatActivity {
         event = dbHandler.getEventById(eventId);
 
         // init elements
-        ImageButton returnButton = findViewById(R.id.returnButton);
+        returnButton = findViewById(R.id.returnButton);
         eventCardHeader = findViewById(R.id.eventCardHeader);
         eventName = findViewById(R.id.eventName);
-        checkBox = findViewById(R.id.closeBox);
+        closeBox = findViewById(R.id.closeBox);
         eventDate = findViewById(R.id.eventDate);
         eventTime = findViewById(R.id.eventTime);
         editButton = findViewById(R.id.editButton);
@@ -72,6 +73,7 @@ public class EventViewActivity extends AppCompatActivity {
         }
 
         // bind elements
+        closeBox.setOnClickListener(view -> onCloseClick());
         returnButton.setOnClickListener(view -> onReturnClick());
         editButton.setOnClickListener(view -> onEditClick());
         deleteButton.setOnClickListener(view -> onDeleteClick());
@@ -82,6 +84,7 @@ public class EventViewActivity extends AppCompatActivity {
         eventName.setText(event.getTitle());
         eventDate.setText(convertDate(event.getDate()) + " |");
         eventGroup.setText(event.getGroup());
+        System.out.println(event.getText());
         eventText.setText(event.getText());
         eventCardHeader.setBackground(newEventHeader(event.getColor()));
 
@@ -145,6 +148,29 @@ public class EventViewActivity extends AppCompatActivity {
         System.out.println("deleting event...");
         event.delete(dbHandler);
         onReturnClick();
+    }
+
+    @SuppressLint("ResourceType")
+    private void onCloseClick() {
+        crossText(eventName, closeBox.isChecked());
+        crossText(eventGroup, closeBox.isChecked());
+        crossText(eventDate, closeBox.isChecked());
+        crossText(eventTime, closeBox.isChecked());
+        if (closeBox.isChecked()) {
+            System.out.println("closing event...");
+            eventCardHeader.setBackground(newEventHeader(0x20000000));
+
+        } else {
+            System.out.println("opening event...");
+            eventCardHeader.setBackground(newEventHeader(event.getColor()));
+        }
+    }
+    private void crossText(TextView textView, boolean isCrossing) {
+        if (isCrossing) {
+            textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else {
+            textView.setPaintFlags(textView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
     }
 }
 

@@ -74,13 +74,11 @@ public class CalendarViewActivity extends AppCompatActivity {
 
 
         // Обработчик выбора даты в CalendarView
-        calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
-            @Override
-            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                if (selected) {
-                    // Обновление списка событий при выборе даты
-                    updateEventList(String.format("%04d-%02d-%02d", date.getYear(), date.getMonth() + 1, date.getDay()));
-                }
+        calendarView.setOnDateChangedListener((widget, date, selected) -> {
+            if (selected) {
+                System.out.println(date.getMonth());
+                // Обновление списка событий при выборе даты
+                updateEventList(String.format("%04d-%02d-%02d", date.getYear(), date.getMonth() + 1, date.getDay()));
             }
         });
 
@@ -223,7 +221,7 @@ public class CalendarViewActivity extends AppCompatActivity {
 
     private int getCurrentMonth() {
         Calendar calendar = Calendar.getInstance();
-        return calendar.get(Calendar.MONTH) + 1;
+        return calendar.get(Calendar.MONTH);
     }
 
     private int getCurrentDay() {

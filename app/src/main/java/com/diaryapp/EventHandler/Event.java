@@ -167,6 +167,7 @@ public class Event {
         this.eventStartTime = cursor.getInt(cursor.getColumnIndex("event_start_time"));
         this.eventEndTime = cursor.getInt(cursor.getColumnIndex("event_end_time"));
         this.eventColor = cursor.getInt(cursor.getColumnIndex("event_color"));
+        this.eventText = cursor.getString(cursor.getColumnIndex("event_text"));
     }
 
     /**
