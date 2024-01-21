@@ -71,7 +71,8 @@
                     android:layout_weight="1"
                     android:text="Event name"
                     android:textAppearance="@style/EventViewEventName"
-                    android:gravity="center_vertical"/>
+                    android:gravity="center_vertical"
+                    tools:ignore="NestedWeights" />
 
                 <!-- checkbox -->
                 <CheckBox
@@ -146,7 +147,7 @@
             android:textAppearance="@style/EventViewEventGroup" />
 
         <EditText
-            android:id="@+id/eventCardText"
+            android:id="@+id/eventText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="15dp"
