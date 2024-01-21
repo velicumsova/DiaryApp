@@ -33,8 +33,8 @@ public class EventViewActivity extends AppCompatActivity {
 
         // bind elements
         returnButton.setOnClickListener(view -> onReturnClick());
-        editButton.setOnClickListener(view -> System.out.println("editing event..."));
-        deleteButton.setOnClickListener(view -> System.out.println("deleting event..."));
+        editButton.setOnClickListener(view -> onEditClick());
+        deleteButton.setOnClickListener(view -> onDeleteClick());
     }
 
     private void onReturnClick() {
@@ -43,6 +43,14 @@ public class EventViewActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
         finish();
+    }
+
+    private void onEditClick() {
+        System.out.println("editing event...");
+    }
+
+    private void onDeleteClick() {
+        System.out.println("deleting event...");
     }
 }
 
