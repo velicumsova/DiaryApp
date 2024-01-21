@@ -3,4 +3,6 @@
 
     <dimen name="event_indicator_size">16dp</dimen>
     <dimen name="event_indicator_margin">4dp</dimen>
+
+    <dimen name="card_corner_radius">8dp</dimen>
 </resources>

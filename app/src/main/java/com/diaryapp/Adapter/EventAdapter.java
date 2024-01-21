@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diaryapp.EventHandler.Event;
@@ -20,6 +21,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     private final Context context;
     private List<Event> events;
+
 
     public EventAdapter(Context context) {
         this.context = context;
@@ -49,6 +51,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         // Update the isClosed property when the checkbox state changes
         holder.todoCheckBox.setChecked(event.isClosed());
 
+        // Set the background color dynamically based on eventColor
+        holder.cardView.setCardBackgroundColor(event.getColor());
+
+
         // Add a new listener to handle checkbox state changes
         holder.todoCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
             // Update the isClosed property when the checkbox state changes
@@ -66,36 +72,51 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
         private CheckBox todoCheckBox;
         private TextView textViewTime;
+        private CardView cardView;
 
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
             todoCheckBox = itemView.findViewById(R.id.todoCheckBox);
             textViewTime = itemView.findViewById(R.id.eventTimeString);
+            cardView = itemView.findViewById(R.id.eventCard);
         }
 
         public void bind(Event event) {
             todoCheckBox.setText(event.getTitle());
-            String formattedTime = formatTime(event.getStartTime(), event.getEndTime());
+            String formattedTime = formatTime(event.getStartTime(), event.getEndTime(), event.getType());
             textViewTime.setText(formattedTime);
 
             // Set the CheckBox state based on the isClosed property
             todoCheckBox.setChecked(event.isClosed());
         }
 
-        private String formatTime(int startTime, int endTime) {
+        private String formatTime(int startTime, int endTime, int eventType) {
             String startTimeStr = String.valueOf(startTime);
-            String endTimeStr = String.valueOf(endTime);
 
-            if (startTimeStr.length() == 3) {
-                startTimeStr = "0" + startTimeStr;
-            }
-            if (endTimeStr.length() == 3) {
-                endTimeStr = "0" + endTimeStr;
+            if (eventType == 0) {
+                // For type 0 (simple event), return only the startTime
+                if (startTimeStr.length() == 3) {
+                    startTimeStr = "0" + startTimeStr;
+                }
+                return startTimeStr.substring(0, 2) + ":" + startTimeStr.substring(2);
+            } else if (eventType == 1) {
+                // For type 1 (event with start and end time), format as "start - end"
+                String endTimeStr = String.valueOf(endTime);
+
+                if (startTimeStr.length() == 3) {
+                    startTimeStr = "0" + startTimeStr;
+                }
+                if (endTimeStr.length() == 3) {
+                    endTimeStr = "0" + endTimeStr;
+                }
+
+                return startTimeStr.substring(0, 2) + ":" + startTimeStr.substring(2) +
+                        " - " +
+                        endTimeStr.substring(0, 2) + ":" + endTimeStr.substring(2);
             }
 
-            return startTimeStr.substring(0, 2) + ":" + startTimeStr.substring(2) +
-                    " - " +
-                    endTimeStr.substring(0, 2) + ":" + endTimeStr.substring(2);
+            // Default case, return an empty string or handle other types as needed
+            return "";
         }
     }
 }

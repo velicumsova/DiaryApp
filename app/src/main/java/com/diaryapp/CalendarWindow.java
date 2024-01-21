@@ -1,6 +1,7 @@
 package com.diaryapp;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.CalendarView;
 import android.widget.TextView;
@@ -129,6 +130,21 @@ public class CalendarWindow extends AppCompatActivity {
         try {
             Event newEvent = new Event();
             newEvent.setDate(currentDate);
+
+            newEvent.setTitle("Начальница");
+            newEvent.setStartTime(1200);
+            newEvent.setEndTime(1300);
+            newEvent.setType(1);
+            newEvent.setColor(Color.parseColor("#7AFC8F"));
+
+            //все цвета из макета фигмы
+            // FC7A7A - красный
+            //  FCA97A - оранжевый
+            // FCDF7A - желтый
+            // 7AFC8F - зеленый
+            // 7ADDFC - голубой
+            // 7A97FC - синий
+            // CD7AF4 - фиолетовый
             newEvent.save(dbHandler);
 
             // Обновление списка событий
