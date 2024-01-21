@@ -41,6 +41,7 @@ public class EventViewActivity extends AppCompatActivity {
     }
 
     private void onReturnClick() {
+        System.out.println("returning to calendar...");
         Intent intent = new Intent(this, CalendarViewActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
