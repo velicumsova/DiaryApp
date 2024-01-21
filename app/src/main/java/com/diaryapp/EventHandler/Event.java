@@ -19,6 +19,7 @@ public class Event {
     private int eventStartTime;
     private int eventEndTime;
     private int eventColor;
+    private String eventText;
 
     // сеттеры
     public void setId(int eventId) {
@@ -55,6 +56,9 @@ public class Event {
 
     public void setColor(int eventColor) {
         this.eventColor = eventColor;
+    }
+    public void setText(String eventText) {
+        this.eventText = eventText;
     }
 
     // геттеры
@@ -93,6 +97,9 @@ public class Event {
     public int getColor() {
         return eventColor;
     }
+    public String getText() {
+        return this.eventText;
+    }
 
     /**
      * Конструктор события по умолчанию.
@@ -101,18 +108,19 @@ public class Event {
     public Event() {
         this.eventId = 0;
         this.isClosed = false;
-        this.groupName = "None";
-        this.eventTitle = "Untitled";
+        this.groupName = "Без группы";
+        this.eventTitle = "Безымянное событие";
         this.eventDate = "2024-01-01";
-        this.eventType = 1;
+        this.eventType = 0;
         this.eventStartTime = 1000;
         this.eventEndTime = 2400;
         this.eventColor = 0xFFFF7676;
+        this.eventText = "Без описания";
     }
 
 
     /**
-     * Конструктор из данных напрямую.
+     * Изменение данных события.
      * @param isClosed закрыто ли событие.
      * @param groupName название группы.
      * @param eventTitle имя события.
@@ -121,9 +129,18 @@ public class Event {
      * @param eventStartTime время начала.
      * @param eventEndTime время конца.
      * @param eventColor цвет.
+     * @param eventText описание.
      */
-    public Event(boolean isClosed, String groupName, String eventTitle, String eventDate,
-                 int eventType, int eventStartTime, int eventEndTime, int eventColor) {
+    public void rewrite(boolean isClosed,
+                       String groupName,
+                       String eventTitle,
+                       String eventDate,
+                       int eventType,
+                       int eventStartTime,
+                       int eventEndTime,
+                       int eventColor,
+                       String eventText) {
+
         this.isClosed = isClosed;
         this.groupName = groupName;
         this.eventTitle = eventTitle;
@@ -132,6 +149,7 @@ public class Event {
         this.eventStartTime = eventStartTime;
         this.eventEndTime = eventEndTime;
         this.eventColor = eventColor;
+        this.eventText = eventText;
     }
 
     /**

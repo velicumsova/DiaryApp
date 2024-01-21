@@ -32,7 +32,9 @@ public class DbHandler extends SQLiteOpenHelper {
                 "event_type INTEGER," +
                 "event_start_time INTEGER," +
                 "event_end_time INTEGER," +
-                "event_color INTEGER)";
+                "event_color INTEGER," +
+                "event_text TEXT)";
+
         db.execSQL(createTableQuery);
 
         String createGroupTableQuery = "CREATE TABLE event_groups (" +

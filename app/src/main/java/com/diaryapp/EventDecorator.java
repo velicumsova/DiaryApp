@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat;
 
 import com.diaryapp.EventHandler.DB.DbHandler;
 import com.diaryapp.EventHandler.Event;
+import com.diaryapp.EventHandler.EventCalendar;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.DayViewDecorator;
 import com.prolificinteractive.materialcalendarview.DayViewFacade;
@@ -34,9 +35,7 @@ public class EventDecorator implements DayViewDecorator {
     }
 
     public boolean shouldDecorate(CalendarDay day) {
-        // Проверяем, есть ли события в этот день
-        String date = String.format("%04d-%02d-%02d", day.getYear(), day.getMonth() + 1, day.getDay());
-        List<Event> events = dbHandler.getEventsForDay(date);
+        List<Event> events = EventCalendar.getEventsForDay(dbHandler, day.getYear(), day.getMonth() + 1, day.getDay());
         return events.size() > 0;
     }
 
