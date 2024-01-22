@@ -1,6 +1,7 @@
 package com.diaryapp;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
@@ -18,6 +19,7 @@ import androidx.core.content.ContextCompat;
 
 import com.diaryapp.EventHandler.DB.DbHandler;
 import com.diaryapp.EventHandler.Event;
+import com.diaryapp.EventHandler.EventGroup;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -56,7 +58,7 @@ public class EventViewActivity extends AppCompatActivity {
         dbHandler = new DbHandler(this);
         event = dbHandler.getEventById(eventId);
 
-        // init elements
+        // init widgets
         returnButton = findViewById(R.id.returnButton);
         eventCardHeader = findViewById(R.id.eventCardHeader);
         eventName = findViewById(R.id.eventName);
@@ -74,7 +76,7 @@ public class EventViewActivity extends AppCompatActivity {
             fillWidgets();
         }
 
-        // bind elements
+        // bind widgets
         closeBox.setOnClickListener(view -> onCloseClick());
         returnButton.setOnClickListener(view -> onReturnClick());
         editButton.setOnClickListener(view -> onEditClick());
@@ -114,7 +116,7 @@ public class EventViewActivity extends AppCompatActivity {
     }
 
     @SuppressLint("DefaultLocale")
-    private static String convertTime(int timeValue) {
+    public static String convertTime(int timeValue) {
         if (timeValue >= 0 && timeValue <= 2400) {
             int hours = timeValue / 100;
             int minutes = timeValue % 100;
@@ -124,7 +126,7 @@ public class EventViewActivity extends AppCompatActivity {
         }
     }
 
-    private static String convertDate(String inputDate) {
+    public static String convertDate(String inputDate) {
         try {
             Date date = inputDateFormat.parse(inputDate);
             assert date != null;
@@ -136,7 +138,6 @@ public class EventViewActivity extends AppCompatActivity {
     }
 
     private void onReturnClick() {
-        System.out.println("returning to calendar...");
         Intent intent = new Intent(this, CalendarViewActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
@@ -159,9 +160,18 @@ public class EventViewActivity extends AppCompatActivity {
     }
 
     private void onDeleteClick() {
-        System.out.println("deleting event...");
-        event.delete(dbHandler);
-        onReturnClick();
+        new AlertDialog.Builder(this)
+                .setTitle("Подтверждение удаления")
+                .setMessage("Удалить событие \"" + event.getTitle() + "\"? Это действие невозможно отменить")
+
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                    event.delete(dbHandler);
+                    onReturnClick();
+                })
+
+                .setNegativeButton(android.R.string.no, null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
     @SuppressLint("ResourceType")
