@@ -34,6 +34,7 @@ import com.diaryapp.EventHandler.Event;
 import com.diaryapp.EventHandler.EventCalendar;
 import com.diaryapp.EventHandler.EventGroup;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 public class EditEventViewActivity extends AppCompatActivity {
@@ -135,6 +136,7 @@ public class EditEventViewActivity extends AppCompatActivity {
                     EventGroup group = new EventGroup(selectedGroup);
                     group.delete(dbHandler);
                     groupList.setAdapter(getGroupsAdapter());
+                    groupList.setSelection(-1);
                 })
 
                 .setNegativeButton(android.R.string.no, null)
@@ -266,11 +268,9 @@ public class EditEventViewActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, groupNames);
         adapter.setDropDownViewResource(android.R.layout.simple_list_item_single_choice);
 
-        int defaultPosition = adapter.getPosition(event.getGroup());
-
-        groupList.setSelection(1);
         return adapter;
     }
+
 
     private void selectDate() {
         Calendar calendar = Calendar.getInstance();
@@ -280,6 +280,7 @@ public class EditEventViewActivity extends AppCompatActivity {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 (view, selectedYear, selectedMonth, selectedDayOfMonth) -> {
+                    @SuppressLint("DefaultLocale")
                     String selectedDate = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDayOfMonth);
                     event.setDate(selectedDate);
                     eventDate.setText(EventViewActivity.convertDate(selectedDate));
@@ -303,7 +304,7 @@ public class EditEventViewActivity extends AppCompatActivity {
             timePickerDialog = new TimePickerDialog(this,
                     (view, selectedHour, selectedMinute) -> {
                         event.setStartTime(selectedHour * 100 + selectedMinute);
-                        eventStartTime.setText(selectedHour + ":" + selectedMinute);
+                        eventStartTime.setText(EventViewActivity.convertTime(event.getStartTime()));
                     },
                     hour,
                     minute,
@@ -314,7 +315,7 @@ public class EditEventViewActivity extends AppCompatActivity {
             timePickerDialog = new TimePickerDialog(this,
                     (view, selectedHour, selectedMinute) -> {
                         event.setEndTime(selectedHour * 100 + selectedMinute);
-                        eventEndTime.setText(selectedHour + ":" + selectedMinute);
+                        eventEndTime.setText(EventViewActivity.convertTime(event.getEndTime()));
                     },
                     hour,
                     minute,
