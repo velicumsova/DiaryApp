@@ -65,4 +65,13 @@ public class EventCalendar {
         }
         return groups;
     }
+
+    /**
+     * Метод для получения всех названий групп.
+     * @param db объект DbHandler.
+     * @return список названий.
+     */
+    public static List<String> getAllGroupNames (DbHandler db) {
+        return db.getAllGroups();
+    }
 }

@@ -56,7 +56,7 @@ public class EventViewActivity extends AppCompatActivity {
         dbHandler = new DbHandler(this);
         event = dbHandler.getEventById(eventId);
 
-        // init elements
+        // init widgets
         returnButton = findViewById(R.id.returnButton);
         eventCardHeader = findViewById(R.id.eventCardHeader);
         eventName = findViewById(R.id.eventName);
@@ -74,7 +74,7 @@ public class EventViewActivity extends AppCompatActivity {
             fillWidgets();
         }
 
-        // bind elements
+        // bind widgets
         closeBox.setOnClickListener(view -> onCloseClick());
         returnButton.setOnClickListener(view -> onReturnClick());
         editButton.setOnClickListener(view -> onEditClick());
@@ -136,7 +136,6 @@ public class EventViewActivity extends AppCompatActivity {
     }
 
     private void onReturnClick() {
-        System.out.println("returning to calendar...");
         Intent intent = new Intent(this, CalendarViewActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
@@ -159,7 +158,6 @@ public class EventViewActivity extends AppCompatActivity {
     }
 
     private void onDeleteClick() {
-        System.out.println("deleting event...");
         event.delete(dbHandler);
         onReturnClick();
     }

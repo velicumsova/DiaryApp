@@ -5,36 +5,41 @@
     android:layout_height="fill_parent"
     android:background="#EBEBEB">
 
-    <!-- return button -->
-    <ImageButton
-        android:id="@+id/returnButton"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginStart="15dp"
-        android:background="@drawable/return_icon"
-        android:contentDescription="Return" />
-
-    <!-- view name -->
-    <TextView
-        android:id="@+id/eventViewName"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/menuBarLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center_vertical"
-        android:layout_marginTop="10dp"
-        android:text="Просмотр события"
-        android:textAppearance="@style/EventViewName"
-        android:textColor="#60000000"
-        android:textSize="24sp" />
+        android:padding="10dp"
+        android:gravity="center">
+
+        <!-- return button -->
+        <ImageButton
+            android:id="@+id/returnButton"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/return_icon"
+            android:contentDescription="Return" />
+
+        <!-- view name -->
+        <TextView
+            android:id="@+id/eventViewName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:layout_gravity="center"
+            android:text="Просмотр события"
+            android:textAppearance="@style/EventViewName"
+            android:textColor="#60000000"
+            android:textSize="24sp" />
+
+    </LinearLayout>
 
     <!-- event card background -->
     <LinearLayout
         android:id="@+id/eventCardBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/eventViewName"
-        android:layout_marginTop="10dp"
+        android:layout_below="@+id/menuBarLayout"
         android:background="@drawable/event_card_background"
         android:elevation="4dp"
         android:orientation="vertical"

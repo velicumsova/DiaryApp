@@ -29,8 +29,8 @@ public class EventGroup {
      * Метод для добавления группы в базу данных.
      * @param db объект DbHandler.
      */
-    public void save(DbHandler db) {
-        db.addGroup(this.name);
+    public static void add(DbHandler db, String groupName) {
+        db.addGroup(groupName);
     }
 
     /**
@@ -38,7 +38,7 @@ public class EventGroup {
      * @param db объект DbHandler.
      * @param newName новое имя группы.
      */
-    public void update(DbHandler db, String newName) {
+    public void save(DbHandler db, String newName) {
         db.updateGroup(this.name, newName);
     }
 
