@@ -25,7 +25,7 @@ public class DbHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String createTableQuery = "CREATE TABLE events (" +
                 "event_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "is_closed BOOLEAN," +
+                "is_closed INTEGER," +
                 "group_name TEXT," +
                 "event_title TEXT," +
                 "event_date DATE," +
@@ -121,7 +121,7 @@ public class DbHandler extends SQLiteOpenHelper {
         }
 
         ContentValues values = new ContentValues();
-        values.put("is_closed", event.isClosed());
+        values.put("is_closed", boolToInt(event.isClosed()));
         values.put("group_name", event.getGroup());
         values.put("event_title", event.getTitle());
         values.put("event_date", event.getDate());
@@ -154,7 +154,7 @@ public class DbHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put("is_closed", updatedEvent.isClosed());
+        values.put("is_closed", boolToInt(updatedEvent.isClosed()));
         values.put("group_name", updatedEvent.getGroup());
         values.put("event_title", updatedEvent.getTitle());
         values.put("event_date", updatedEvent.getDate());
@@ -162,30 +162,33 @@ public class DbHandler extends SQLiteOpenHelper {
         values.put("event_start_time", updatedEvent.getStartTime());
         values.put("event_end_time", updatedEvent.getEndTime());
         values.put("event_color", updatedEvent.getColor());
+        values.put("event_text", updatedEvent.getText());
 
         db.update("events", values, "event_id=?", new String[]{String.valueOf(updatedEvent.getId())});
         db.close();
     }
+
 
     // получить событие по ID
     public Event getEventById(int eventId) {
         SQLiteDatabase db = this.getReadableDatabase();
         Event event = null;
 
-        Cursor cursor = db.query("events", null, "event_id = ?", new String[]{String.valueOf(eventId)}, null, null, null);
+        try {
+            Cursor cursor = db.query("events", null, "event_id = ?", new String[]{String.valueOf(eventId)}, null, null, null);
 
-        if (cursor != null && cursor.moveToFirst()) {
-            event = new Event(cursor);
+            if (cursor != null && cursor.moveToFirst()) {
+                event = new Event(cursor);
+            }
+        } finally {
+            if (db != null && db.isOpen()) {
+                db.close();
+            }
         }
-
-        if (cursor != null) {
-            cursor.close();
-        }
-
-        db.close();
 
         return event;
     }
+
 
     // получить все события
     public List<Event> getAllEvents() {
@@ -265,6 +268,18 @@ public class DbHandler extends SQLiteOpenHelper {
         db.close();
 
         return events;
+    }
+
+    public static boolean intToBool(int Int) {
+        return Int != 0;
+    }
+
+    public static int boolToInt(boolean Bool) {
+        if (Bool) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }
 

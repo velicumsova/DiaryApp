@@ -2,6 +2,7 @@ package com.diaryapp.EventHandler;
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.diaryapp.EventHandler.DB.DbHandler;
 
@@ -159,7 +160,7 @@ public class Event {
     @SuppressLint("Range")
     public Event(Cursor cursor) {
         this.eventId = cursor.getInt(cursor.getColumnIndex("event_id"));
-        this.isClosed = Boolean.parseBoolean(cursor.getString(cursor.getColumnIndex("is_closed")));
+        this.isClosed = DbHandler.intToBool(cursor.getInt(cursor.getColumnIndex("is_closed")));
         this.groupName = cursor.getString(cursor.getColumnIndex("group_name"));
         this.eventTitle = cursor.getString(cursor.getColumnIndex("event_title"));
         this.eventDate = cursor.getString(cursor.getColumnIndex("event_date"));
@@ -176,14 +177,17 @@ public class Event {
      * @return объект Event.
      */
     public static Event getById(DbHandler db, int Id) {
-        return db.getEventById(Id);
+        Event event = db.getEventById(Id);
+        event.log();
+        return event;
     }
 
     /**
      * Метод для добавления события в базу данных.
      * @param db объект DbHandler.
      */
-    public void save(DbHandler db) {
+    public void add(DbHandler db) {
+        this.log();
         db.addEvent(this);
     }
 
@@ -191,7 +195,8 @@ public class Event {
      * Метод для обновления информации о событии.
      * @param db объект DbHandler.
      */
-    public void update(DbHandler db) {
+    public void save(DbHandler db) {
+        this.log();
         db.updateEvent(this);
     }
 
@@ -201,5 +206,21 @@ public class Event {
      */
     public void delete(DbHandler db) {
         db.deleteEvent(this);
+    }
+
+    /**
+     * Метод для вывода в консоль всей информации о событии.
+     */
+    public void log() {
+        Log.d("EventInfo", "Id: " + this.getId() +
+                ", Title: " + this.getTitle() +
+                ", Is closed: " + this.isClosed() +
+                ", Group: " + this.getGroup() +
+                ", Type: " + this.getType() +
+                ", Date: " + this.getDate() +
+                ", Start time: " + this.getStartTime() +
+                ", End time: " + this.getEndTime() +
+                ", Color: " + this.getColor() +
+                ", Text: " + this.getText());
     }
 }

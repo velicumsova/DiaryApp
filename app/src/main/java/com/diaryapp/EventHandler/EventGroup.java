@@ -58,7 +58,7 @@ public class EventGroup {
      */
     public void addEvent (DbHandler db, Event event) {
         event.setGroup(this.name);
-        event.update(db);
+        event.add(db);
     }
 
     /**

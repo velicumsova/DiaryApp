@@ -84,7 +84,6 @@ public class EventViewActivity extends AppCompatActivity {
         eventName.setText(event.getTitle());
         eventDate.setText(convertDate(event.getDate()) + " |");
         eventGroup.setText(event.getGroup());
-        System.out.println(event.getText());
         eventText.setText(event.getText());
         eventCardHeader.setBackground(newEventHeader(event.getColor()));
 
@@ -94,6 +93,8 @@ public class EventViewActivity extends AppCompatActivity {
             eventTime.setText(convertTime(event.getStartTime()) + " - " + convertTime(event.getEndTime()));
         }
 
+        closeBox.setChecked(event.isClosed());
+        onCloseClick();
     }
 
     private Drawable newEventHeader(int color) {
@@ -156,15 +157,19 @@ public class EventViewActivity extends AppCompatActivity {
         crossText(eventGroup, closeBox.isChecked());
         crossText(eventDate, closeBox.isChecked());
         crossText(eventTime, closeBox.isChecked());
-        if (closeBox.isChecked()) {
-            System.out.println("closing event...");
-            eventCardHeader.setBackground(newEventHeader(0x20000000));
 
+        event.setClosed(closeBox.isChecked());
+        event.save(dbHandler);
+
+        Event.getById(dbHandler, event.getId());
+
+        if (closeBox.isChecked()) {
+            eventCardHeader.setBackground(newEventHeader(0x20000000));
         } else {
-            System.out.println("opening event...");
             eventCardHeader.setBackground(newEventHeader(event.getColor()));
         }
     }
+
     private void crossText(TextView textView, boolean isCrossing) {
         if (isCrossing) {
             textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
