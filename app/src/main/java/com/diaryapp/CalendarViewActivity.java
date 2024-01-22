@@ -1,5 +1,7 @@
 package com.diaryapp;
 
+import static com.diaryapp.EventHandler.EventCalendar.getAllGroups;
+
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diaryapp.Adapter.EventAdapter;
 import com.diaryapp.EventHandler.DB.DbHandler;
 import com.diaryapp.EventHandler.Event;
+import com.diaryapp.EventHandler.EventGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
@@ -23,7 +26,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class CalendarViewActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 1; // нужно для удаления события и возвращения в календарь
@@ -68,6 +73,13 @@ public class CalendarViewActivity extends AppCompatActivity {
                 showSortOptionsDialog();
             }
         });
+        ImageButton filterButton = findViewById(R.id.imageButton2);
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFilterOptionsDialog();
+            }
+        });
 
 
         // Обработчик выбора даты в CalendarView
@@ -80,7 +92,9 @@ public class CalendarViewActivity extends AppCompatActivity {
         });
 
         // Начальная загрузка событий для текущей даты
-        updateEventList(String.format("%04d-%02d-%02d", getCurrentYear(), getCurrentMonth() + 1, getCurrentDay()));
+        Calendar currentDateCalendar = Calendar.getInstance();
+        updateEventList(String.format("%04d-%02d-%02d", currentDateCalendar.get(Calendar.YEAR),
+                currentDateCalendar.get(Calendar.MONTH) + 1, currentDateCalendar.get(Calendar.DAY_OF_MONTH)));
 
         // В вашем методе инициализации активности или фрагмента
         FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.FAG);
@@ -93,6 +107,83 @@ public class CalendarViewActivity extends AppCompatActivity {
         calendarView.invalidateDecorators();
     }
 
+    //ФИЛЬТРАЦИЯ
+    private void showFilterOptionsDialog() {
+        // Получение всех событий для выбранной даты
+        String selectedDate = tasksDateText.getText().toString();
+        List<Event> eventsForDay = dbHandler.getEventsForDay(selectedDate);
+
+        // Создание списка доступных групп на основе событий в текущей дате
+        Set<String> availableGroups = new HashSet<>();
+        for (Event event : eventsForDay) {
+            availableGroups.add(event.getGroup());
+        }
+
+        // Создание списка доступных групп для диалога
+        List<String> availableGroupList = new ArrayList<>(availableGroups);
+
+        // Create a list of group names for the dialog
+        CharSequence[] groupNames = new CharSequence[availableGroupList.size()];
+        boolean[] selectedGroups = new boolean[availableGroupList.size()];
+
+        for (int i = 0; i < availableGroupList.size(); i++) {
+            groupNames[i] = availableGroupList.get(i);
+            // По умолчанию все группы выбраны
+            selectedGroups[i] = true;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Выберите группы для фильтрации");
+        builder.setMultiChoiceItems(groupNames, selectedGroups, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                // Обработка выбора группы
+                selectedGroups[which] = isChecked;
+            }
+        });
+        builder.setPositiveButton("Применить", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // Фильтрация по выбранным группам
+                filterBySelectedGroups(selectedGroups, availableGroupList);
+            }
+        });
+        builder.setNegativeButton("Отмена", null);
+        builder.show();
+    }
+
+    private void filterBySelectedGroups(boolean[] selectedGroups, List<String> availableGroups) {
+        // Фильтрация событий по выбранным группам и дате
+        String selectedDate = tasksDateText.getText().toString();
+        List<Event> filteredEvents = getEventsForDayAndSelectedGroups(selectedDate, selectedGroups, availableGroups);
+
+        // Обновление RecyclerView через адаптер
+        eventList.clear();
+        eventList.addAll(filteredEvents);
+        eventAdapter.setEvents(eventList);
+        eventAdapter.notifyDataSetChanged();
+    }
+
+    private List<Event> getEventsForDayAndSelectedGroups(String selectedDate, boolean[] selectedGroups, List<String> availableGroups) {
+        // Получение всех событий для выбранной даты
+        List<Event> eventsForDay = dbHandler.getEventsForDay(selectedDate);
+        List<Event> filteredEvents = new ArrayList<>();
+
+        // Фильтрация по выбранным группам
+        for (Event event : eventsForDay) {
+            for (int i = 0; i < selectedGroups.length; i++) {
+                if (selectedGroups[i] && event.getGroup().equals(availableGroups.get(i))) {
+                    filteredEvents.add(event);
+                    break; // Прерываем цикл, если событие соответствует хотя бы одной выбранной группе
+                }
+            }
+        }
+
+        return filteredEvents;
+    }
+
+
+    //СОРТИРОВКА
     private void showSortOptionsDialog() {
         // Список вариантов сортировки
         final CharSequence[] options = {"По алфавиту", "По продолжительности", "Сбросить сортировку"};
@@ -120,6 +211,36 @@ public class CalendarViewActivity extends AppCompatActivity {
             }
         });
         builder.show();
+    }
+
+    private void sortEventsAlphabetically() {
+        // сортировка по алфавиту
+        Collections.sort(eventList, new Comparator<Event>() {
+            @Override
+            public int compare(Event event1, Event event2) {
+                return event1.getTitle().compareToIgnoreCase(event2.getTitle());
+            }
+        });
+
+        // Обновите RecyclerView через адаптер после сортировки или восстановления порядка
+        eventAdapter.setEvents(eventList);
+        eventAdapter.notifyDataSetChanged();
+    }
+
+    private void sortEventsByDuration() {
+        Collections.sort(eventList, new Comparator<Event>() {
+            @Override
+            public int compare(Event event1, Event event2) {
+                // Сравнение по продолжительности (разнице между временами начала и конца) в обратном порядке
+                int duration1 = event1.getEndTime() - event1.getStartTime();
+                int duration2 = event2.getEndTime() - event2.getStartTime();
+                return Integer.compare(duration2, duration1);
+            }
+        });
+
+        // Обновите RecyclerView через адаптер после сортировки
+        eventAdapter.setEvents(eventList);
+        eventAdapter.notifyDataSetChanged();
     }
 
     private void resetSort() {
@@ -181,51 +302,6 @@ public class CalendarViewActivity extends AppCompatActivity {
         eventAdapter.notifyDataSetChanged();
     }
 
-    private void sortEventsAlphabetically() {
-        // сортировка по алфавиту
-        Collections.sort(eventList, new Comparator<Event>() {
-            @Override
-            public int compare(Event event1, Event event2) {
-                return event1.getTitle().compareToIgnoreCase(event2.getTitle());
-            }
-        });
-
-        // Обновите RecyclerView через адаптер после сортировки или восстановления порядка
-        eventAdapter.setEvents(eventList);
-        eventAdapter.notifyDataSetChanged();
-    }
-
-    private void sortEventsByDuration() {
-        Collections.sort(eventList, new Comparator<Event>() {
-            @Override
-            public int compare(Event event1, Event event2) {
-                // Сравнение по продолжительности (разнице между временами начала и конца) в обратном порядке
-                int duration1 = event1.getEndTime() - event1.getStartTime();
-                int duration2 = event2.getEndTime() - event2.getStartTime();
-                return Integer.compare(duration2, duration1);
-            }
-        });
-
-        // Обновите RecyclerView через адаптер после сортировки
-        eventAdapter.setEvents(eventList);
-        eventAdapter.notifyDataSetChanged();
-    }
-
-    private int getCurrentYear() {
-        Calendar calendar = Calendar.getInstance();
-        return calendar.get(Calendar.YEAR);
-    }
-
-    private int getCurrentMonth() {
-        Calendar calendar = Calendar.getInstance();
-        return calendar.get(Calendar.MONTH);
-    }
-
-    private int getCurrentDay() {
-        Calendar calendar = Calendar.getInstance();
-        return calendar.get(Calendar.DAY_OF_MONTH);
-    }
-
     public void addEvent() {
         String currentDate = tasksDateText.getText().toString();
 
@@ -233,11 +309,12 @@ public class CalendarViewActivity extends AppCompatActivity {
             Event newEvent = new Event();
             newEvent.setDate(currentDate);
 
-//            newEvent.setTitle("День дня");
-//            newEvent.setStartTime(1200);
-//            newEvent.setEndTime(2300);
-//            newEvent.setType(1);
-//            newEvent.setColor(Color.parseColor("#7A97FC"));
+//            newEvent.setTitle("Поиграть в Mass Effect");
+//            newEvent.setGroup("Gaming");
+//            newEvent.setStartTime(1300);
+//            newEvent.setEndTime(1300);
+//            newEvent.setType(0);
+            //newEvent.setColor(Color.parseColor("#7A97FC"));
 
             //все цвета из макета фигмы
             // FC7A7A - красный
