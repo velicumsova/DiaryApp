@@ -8,6 +8,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ public class EventViewActivity extends AppCompatActivity {
     private static final SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     @SuppressLint("ConstantLocale")
     private static final SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+    private static final int REQUEST_CODE = 1; // нужно для возвращения в просмотр события
     private DbHandler dbHandler;
     private Event event;
     private LinearLayout eventCardHeader;
@@ -142,7 +144,18 @@ public class EventViewActivity extends AppCompatActivity {
     }
 
     private void onEditClick() {
-        System.out.println("editing event...");
+        Intent intent = new Intent(this, EditEventViewActivity.class);
+        intent.putExtra("eventId", event.getId());
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == 0) {
+            event = Event.getById(dbHandler, event.getId());
+            fillWidgets();
+        }
     }
 
     private void onDeleteClick() {
