@@ -1,7 +1,5 @@
 package com.diaryapp;
 
-import static com.diaryapp.EventHandler.EventCalendar.getAllGroups;
-
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diaryapp.Adapter.EventAdapter;
 import com.diaryapp.EventHandler.DB.DbHandler;
 import com.diaryapp.EventHandler.Event;
-import com.diaryapp.EventHandler.EventGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
@@ -32,11 +29,11 @@ import java.util.Set;
 
 public class CalendarViewActivity extends AppCompatActivity {
     private static final int REQUEST_CODE = 1; // нужно для удаления события и возвращения в календарь
+    private static final int NOTIFICATION_PERMISSION_CODE = 100;
     private TextView tasksDateText;
     private EventAdapter eventAdapter;
     private DbHandler dbHandler;
     private List<Event> eventList;
-
     private List<Event> originalEventList;
     private MaterialCalendarView calendarView;
 
