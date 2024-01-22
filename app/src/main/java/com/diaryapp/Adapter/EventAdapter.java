@@ -2,6 +2,7 @@ package com.diaryapp.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,8 +61,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         // Update the isClosed property when the checkbox state changes
         holder.todoCheckBox.setChecked(event.isClosed());
 
-        // Set the background color dynamically based on eventColor
-        holder.cardView.setCardBackgroundColor(event.getColor());
+        // Set the background color and text style dynamically based on the closed state
+        if (event.isClosed()) {
+            holder.cardView.setCardBackgroundColor(0x20000000);
+            holder.todoCheckBox.setPaintFlags(holder.todoCheckBox.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else {
+            holder.cardView.setCardBackgroundColor(event.getColor());
+            holder.todoCheckBox.setPaintFlags(holder.todoCheckBox.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
 
 
         // Add a new listener to handle checkbox state changes

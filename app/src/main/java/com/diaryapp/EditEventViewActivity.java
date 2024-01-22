@@ -283,7 +283,7 @@ public class EditEventViewActivity extends AppCompatActivity {
                     @SuppressLint("DefaultLocale")
                     String selectedDate = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDayOfMonth);
                     event.setDate(selectedDate);
-                    eventDate.setText(selectedDate);
+                    eventDate.setText(EventViewActivity.convertDate(selectedDate));
                 },
                 year,
                 month,
