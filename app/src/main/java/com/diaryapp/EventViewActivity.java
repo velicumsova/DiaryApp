@@ -133,7 +133,7 @@ public class EventViewActivity extends AppCompatActivity {
             return outputDateFormat.format(date);
         } catch (ParseException e) {
             e.printStackTrace();
-            return "Без даты";
+            return "01.01.2024";
         }
     }
 

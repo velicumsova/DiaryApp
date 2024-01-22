@@ -280,7 +280,8 @@ public class EditEventViewActivity extends AppCompatActivity {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 (view, selectedYear, selectedMonth, selectedDayOfMonth) -> {
-                    String selectedDate = selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDayOfMonth;
+                    @SuppressLint("DefaultLocale")
+                    String selectedDate = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDayOfMonth);
                     event.setDate(selectedDate);
                     eventDate.setText(selectedDate);
                 },
@@ -303,7 +304,7 @@ public class EditEventViewActivity extends AppCompatActivity {
             timePickerDialog = new TimePickerDialog(this,
                     (view, selectedHour, selectedMinute) -> {
                         event.setStartTime(selectedHour * 100 + selectedMinute);
-                        eventStartTime.setText(selectedHour + ":" + selectedMinute);
+                        eventStartTime.setText(EventViewActivity.convertTime(event.getStartTime()));
                     },
                     hour,
                     minute,
@@ -314,7 +315,7 @@ public class EditEventViewActivity extends AppCompatActivity {
             timePickerDialog = new TimePickerDialog(this,
                     (view, selectedHour, selectedMinute) -> {
                         event.setEndTime(selectedHour * 100 + selectedMinute);
-                        eventEndTime.setText(selectedHour + ":" + selectedMinute);
+                        eventEndTime.setText(EventViewActivity.convertTime(event.getEndTime()));
                     },
                     hour,
                     minute,
