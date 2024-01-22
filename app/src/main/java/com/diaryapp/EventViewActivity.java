@@ -2,6 +2,7 @@ package com.diaryapp;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
@@ -29,17 +30,19 @@ public class EventViewActivity extends AppCompatActivity {
     private static final SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     @SuppressLint("ConstantLocale")
     private static final SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+    private static final int REQUEST_CODE = 1; // нужно для возвращения в просмотр события
     private DbHandler dbHandler;
     private Event event;
     private LinearLayout eventCardHeader;
     private TextView eventName;
-    private CheckBox checkBox;
+    private CheckBox closeBox;
+    private ImageButton returnButton;
     private TextView eventDate;
     private TextView eventTime;
     private ImageButton editButton;
     private ImageButton deleteButton;
     private TextView eventGroup;
-    private EditText eventText;
+    private TextView eventText;
 
 
 
@@ -54,10 +57,10 @@ public class EventViewActivity extends AppCompatActivity {
         event = dbHandler.getEventById(eventId);
 
         // init elements
-        ImageButton returnButton = findViewById(R.id.returnButton);
+        returnButton = findViewById(R.id.returnButton);
         eventCardHeader = findViewById(R.id.eventCardHeader);
         eventName = findViewById(R.id.eventName);
-        checkBox = findViewById(R.id.closeBox);
+        closeBox = findViewById(R.id.closeBox);
         eventDate = findViewById(R.id.eventDate);
         eventTime = findViewById(R.id.eventTime);
         editButton = findViewById(R.id.editButton);
@@ -72,6 +75,7 @@ public class EventViewActivity extends AppCompatActivity {
         }
 
         // bind elements
+        closeBox.setOnClickListener(view -> onCloseClick());
         returnButton.setOnClickListener(view -> onReturnClick());
         editButton.setOnClickListener(view -> onEditClick());
         deleteButton.setOnClickListener(view -> onDeleteClick());
@@ -91,6 +95,8 @@ public class EventViewActivity extends AppCompatActivity {
             eventTime.setText(convertTime(event.getStartTime()) + " - " + convertTime(event.getEndTime()));
         }
 
+        closeBox.setChecked(event.isClosed());
+        onCloseClick();
     }
 
     private Drawable newEventHeader(int color) {
@@ -138,13 +144,51 @@ public class EventViewActivity extends AppCompatActivity {
     }
 
     private void onEditClick() {
-        System.out.println("editing event...");
+        Intent intent = new Intent(this, EditEventViewActivity.class);
+        intent.putExtra("eventId", event.getId());
+        startActivityForResult(intent, REQUEST_CODE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE && resultCode == 0) {
+            event = Event.getById(dbHandler, event.getId());
+            fillWidgets();
+        }
     }
 
     private void onDeleteClick() {
         System.out.println("deleting event...");
         event.delete(dbHandler);
         onReturnClick();
+    }
+
+    @SuppressLint("ResourceType")
+    private void onCloseClick() {
+        crossText(eventName, closeBox.isChecked());
+        crossText(eventGroup, closeBox.isChecked());
+        crossText(eventDate, closeBox.isChecked());
+        crossText(eventTime, closeBox.isChecked());
+
+        event.setClosed(closeBox.isChecked());
+        event.save(dbHandler);
+
+        Event.getById(dbHandler, event.getId());
+
+        if (closeBox.isChecked()) {
+            eventCardHeader.setBackground(newEventHeader(0x20000000));
+        } else {
+            eventCardHeader.setBackground(newEventHeader(event.getColor()));
+        }
+    }
+
+    private void crossText(TextView textView, boolean isCrossing) {
+        if (isCrossing) {
+            textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else {
+            textView.setPaintFlags(textView.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
     }
 }
 

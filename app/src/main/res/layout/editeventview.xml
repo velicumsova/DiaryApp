@@ -1,0 +1,315 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/eventViewLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#EBEBEB">
+
+    <!-- return button -->
+    <ImageButton
+        android:id="@+id/returnButton"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
+        android:background="@drawable/return_icon"
+        android:contentDescription="Return" />
+
+    <!-- view name -->
+    <TextView
+        android:id="@+id/eventViewName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="10dp"
+        android:text="Редактирование события"
+        android:textAppearance="@style/EventViewName"
+        android:textColor="#60000000"
+        android:textSize="24sp" />
+
+    <!-- event card background -->
+    <LinearLayout
+        android:id="@+id/eventCardBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/eventViewName"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/event_card_background"
+        android:elevation="4dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- event card header -->
+        <LinearLayout
+            android:id="@+id/eventCardHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:padding="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/event_card_edit_header"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            tools:ignore="UseSwitchCompatOrMaterialXml">
+
+            <LinearLayout
+                android:id="@+id/eventNameContainer"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_weight="1">
+
+                <!-- event card name -->
+                <EditText
+                    android:id="@+id/eventName"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:padding="10dp"
+                    android:textAppearance="@style/EventViewEventName"
+                    android:textColor="#656565"
+                    android:background="@drawable/event_card_edit"
+                    android:gravity="center"
+                    tools:ignore="LabelFor,NestedWeights,Suspicious0dp"
+                    android:autofillHints=""
+                    android:inputType="textNoSuggestions"
+                    android:hint="Название события"/>
+
+                <!-- event card group -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="10dp">
+
+                    <Spinner
+                        android:id="@+id/eventGroupSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="10dp"
+                        android:padding="5dp"
+                        android:background="@drawable/event_card_edit_groups"
+                        android:entries="@array/group_names">
+                    </Spinner>
+
+                    <ImageButton
+                        android:id="@+id/addGroupButton"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/add_icon"
+                        android:backgroundTint="#72000000"
+                        android:contentDescription="Add group"
+                        android:scaleType="centerInside"
+                        android:visibility="visible"
+                        app:tint="#FF0000" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp"
+                >
+
+                <RadioButton
+                    android:id="@+id/typeSimpleButton"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/event_card_button"
+                    android:textColor="#656565"
+                    android:textAppearance="@style/EventEditEventType"
+                    android:text="Простое" />
+
+                <RadioButton
+                    android:id="@+id/typeLongTermButton"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:layout_margin="2dp"
+                    android:background="@drawable/event_card_button"
+                    android:textColor="#656565"
+                    android:textAppearance="@style/EventEditEventType"
+                    android:text="Продолжительное" />
+
+            </RadioGroup>
+
+            <LinearLayout
+                android:id="@+id/eventDescrContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="10dp">
+
+                <!-- event date -->
+                <TextView
+                    android:id="@+id/eventDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Дата"
+                    android:gravity="center"
+                    android:layout_margin="2dp"
+                    android:paddingVertical="4dp"
+                    android:paddingHorizontal="7dp"
+                    android:background="@drawable/event_card_button"
+                    android:textAppearance="@style/EventEditEventDate"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+
+                <!-- event time -->
+                <TextView
+                    android:id="@+id/eventStartTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Время начала"
+                    android:gravity="center"
+                    android:layout_margin="2dp"
+                    android:paddingVertical="4dp"
+                    android:paddingHorizontal="7dp"
+                    android:background="@drawable/event_card_button"
+                    android:textAppearance="@style/EventEditEventDate"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <TextView
+                    android:id="@+id/eventEndTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Время завершения"
+                    android:gravity="center"
+                    android:layout_margin="2dp"
+                    android:paddingVertical="4dp"
+                    android:paddingHorizontal="7dp"
+                    android:background="@drawable/event_card_button"
+                    android:textAppearance="@style/EventEditEventDate"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+            </LinearLayout>
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp"
+                android:padding="5dp"
+                android:background="@drawable/event_card_edit_color">
+
+                <RadioButton
+                    android:id="@+id/redColorButton"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:layout_margin="4dp"
+                    android:layout_gravity="center"
+                    android:button="@null"
+                    android:background="@drawable/red_color_button" />
+
+                <RadioButton
+                    android:id="@+id/orangeColorButton"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:layout_margin="4dp"
+                    android:layout_gravity="center"
+                    android:button="@null"
+                    android:background="@drawable/orange_color_button" />
+
+                <RadioButton
+                    android:id="@+id/yellowColorButton"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:layout_margin="4dp"
+                    android:layout_gravity="center"
+                    android:button="@null"
+                    android:background="@drawable/yellow_color_button" />
+
+                <RadioButton
+                    android:id="@+id/greenColorButton"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:layout_margin="4dp"
+                    android:layout_gravity="center"
+                    android:button="@null"
+                    android:background="@drawable/green_color_button" />
+
+                <RadioButton
+                    android:id="@+id/blueColorButton"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:layout_margin="4dp"
+                    android:layout_gravity="center"
+                    android:button="@null"
+                    android:background="@drawable/blue_color_button" />
+
+                <RadioButton
+                    android:id="@+id/indigoColorButton"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:layout_margin="4dp"
+                    android:layout_gravity="center"
+                    android:button="@null"
+                    android:background="@drawable/indigo_color_button" />
+
+                <RadioButton
+                    android:id="@+id/violetColorButton"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_weight="1"
+                    android:layout_margin="4dp"
+                    android:layout_gravity="center"
+                    android:button="@null"
+                    android:background="@drawable/violet_color_button" />
+
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/eventText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            android:autofillHints=""
+            android:background="@drawable/event_card_edit"
+            android:gravity="start"
+            android:hint="Описание события"
+            android:inputType="textMultiLine"
+            android:orientation="vertical"
+            android:padding="15dp"
+            android:textColor="#656565"
+            tools:ignore="LabelFor" />
+
+    </LinearLayout>
+
+</RelativeLayout>

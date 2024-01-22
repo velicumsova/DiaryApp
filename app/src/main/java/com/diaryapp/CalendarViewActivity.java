@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,9 +17,7 @@ import com.diaryapp.Adapter.EventAdapter;
 import com.diaryapp.EventHandler.DB.DbHandler;
 import com.diaryapp.EventHandler.Event;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
-import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -74,13 +71,11 @@ public class CalendarViewActivity extends AppCompatActivity {
 
 
         // Обработчик выбора даты в CalendarView
-        calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
-            @Override
-            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                if (selected) {
-                    // Обновление списка событий при выборе даты
-                    updateEventList(String.format("%04d-%02d-%02d", date.getYear(), date.getMonth() + 1, date.getDay()));
-                }
+        calendarView.setOnDateChangedListener((widget, date, selected) -> {
+            if (selected) {
+                System.out.println(date.getMonth());
+                // Обновление списка событий при выборе даты
+                updateEventList(String.format("%04d-%02d-%02d", date.getYear(), date.getMonth() + 1, date.getDay()));
             }
         });
 
@@ -223,7 +218,7 @@ public class CalendarViewActivity extends AppCompatActivity {
 
     private int getCurrentMonth() {
         Calendar calendar = Calendar.getInstance();
-        return calendar.get(Calendar.MONTH) + 1;
+        return calendar.get(Calendar.MONTH);
     }
 
     private int getCurrentDay() {
@@ -252,7 +247,7 @@ public class CalendarViewActivity extends AppCompatActivity {
             // 7ADDFC - голубой
             // 7A97FC - синий
             // CD7AF4 - фиолетовый
-            newEvent.save(dbHandler);
+            newEvent.add(dbHandler);
 
             // Обновление списка событий
             updateEventList(currentDate);
