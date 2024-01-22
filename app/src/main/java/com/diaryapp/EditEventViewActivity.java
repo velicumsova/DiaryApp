@@ -280,9 +280,9 @@ public class EditEventViewActivity extends AppCompatActivity {
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 (view, selectedYear, selectedMonth, selectedDayOfMonth) -> {
-                    String selectedDate = selectedYear + "-" + (selectedMonth + 1) + "-" + selectedDayOfMonth;
+                    String selectedDate = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDayOfMonth);
                     event.setDate(selectedDate);
-                    eventDate.setText(selectedDate);
+                    eventDate.setText(EventViewActivity.convertDate(selectedDate));
                 },
                 year,
                 month,
