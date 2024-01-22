@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -12,11 +11,9 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.icu.util.Calendar;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -24,7 +21,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -34,18 +30,9 @@ import com.diaryapp.EventHandler.Event;
 import com.diaryapp.EventHandler.EventCalendar;
 import com.diaryapp.EventHandler.EventGroup;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 public class EditEventViewActivity extends AppCompatActivity {
-    private static final int FC7A7A = 0xFFFC7A7A;
-    private static final int FCA97A = 0xFFFCA97A;
-    private static final int FCDF7A = 0xFFFCDF7A;
-    private static final int _7AFC8F = 0xFF7AFC8F;
-    private static final int _7ADDFC = 0xFF7ADDFC;
-    private static final int _7A97FC = 0xFF7A97FC;
-    private static final int CD7AF4 = 0xFFCD7AF4;
-
     private LinearLayout eventCardHeader;
     private ImageButton returnButton;
     private ImageButton saveButton;
@@ -66,13 +53,6 @@ public class EditEventViewActivity extends AppCompatActivity {
     private TextView eventEndTime;
 
     private RadioGroup eventColorRadioGroup;
-    private RadioButton redColorButton;
-    private RadioButton orangeColorButton;
-    private RadioButton yellowColorButton;
-    private RadioButton greenColorButton;
-    private RadioButton blueColorButton;
-    private RadioButton indigoColorButton;
-    private RadioButton violetColorButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,13 +78,6 @@ public class EditEventViewActivity extends AppCompatActivity {
         eventEndTime = findViewById(R.id.eventEndTime);
 
         eventColorRadioGroup = findViewById(R.id.colorRadioGroup);
-        redColorButton = findViewById(R.id.redColorButton);
-        orangeColorButton = findViewById(R.id.orangeColorButton);
-        yellowColorButton = findViewById(R.id.yellowColorButton);
-        greenColorButton = findViewById(R.id.greenColorButton);
-        blueColorButton = findViewById(R.id.blueColorButton);
-        indigoColorButton = findViewById(R.id.indigoColorButton);
-        violetColorButton = findViewById(R.id.violetColorButton);
 
         int eventId = getIntent().getIntExtra("eventId", -1); // -1 по умолчанию
         dbHandler = new DbHandler(this);
@@ -194,8 +167,6 @@ public class EditEventViewActivity extends AppCompatActivity {
 
         return color;
     }
-
-
 
     private void onSaveClick() {
         event.setTitle(String.valueOf(eventName.getText()));
@@ -326,5 +297,3 @@ public class EditEventViewActivity extends AppCompatActivity {
         timePickerDialog.show();
     }
 }
-
-
