@@ -66,8 +66,10 @@ public class DbHandler extends SQLiteOpenHelper {
     public void deleteGroup(String groupName) {
         SQLiteDatabase db = this.getWritableDatabase();
 
+        String updateQuery = "UPDATE events SET group_name = 'Без группы' WHERE group_name = ?";
+        db.execSQL(updateQuery, new String[]{groupName});
+
         db.delete("event_groups", "group_name=?", new String[]{groupName});
-        db.delete("events", "group_name=?", new String[]{groupName});
         db.close();
     }
 

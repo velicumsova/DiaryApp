@@ -142,6 +142,7 @@
             </LinearLayout>
 
             <RadioGroup
+                android:id="@+id/eventTypeGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -189,7 +190,6 @@
                     android:id="@+id/eventDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:text="Дата"
                     android:gravity="center"
                     android:layout_margin="2dp"
@@ -202,6 +202,11 @@
 
 
                 <!-- event time -->
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
                 <TextView
                     android:id="@+id/eventStartTime"
                     android:layout_width="wrap_content"
@@ -220,19 +225,20 @@
                     android:id="@+id/eventEndTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Время конца"
-                    android:gravity="center"
                     android:layout_margin="2dp"
-                    android:paddingVertical="4dp"
-                    android:paddingHorizontal="7dp"
                     android:background="@drawable/event_card_button"
-                    android:textAppearance="@style/EventEditEventDate"
                     android:clickable="true"
-                    android:focusable="true" />
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:paddingHorizontal="7dp"
+                    android:paddingVertical="4dp"
+                    android:text="Время конца"
+                    android:textAppearance="@style/EventEditEventDate" />
 
             </LinearLayout>
 
             <RadioGroup
+                android:id="@+id/colorRadioGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
