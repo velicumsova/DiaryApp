@@ -38,25 +38,25 @@
         app:layout_constraintTop_toBottomOf="@+id/textView">
 
         <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-
-
             android:id="@+id/calendarView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/linearLayout"
             android:layout_marginBottom="16dp"
 
             android:clipToOutline="false"
             android:outlineProvider="none"
-            app:mcv_selectionColor="#000000"
-            app:mcv_showOtherDates="all" />
+            app:mcv_allowClickDaysOutsideCurrentMonth="false"
+            app:mcv_calendarMode="week"
+            app:mcv_selectionColor="#59000000"
+            app:mcv_showOtherDates="all|decorated_disabled" />
     </androidx.cardview.widget.CardView>
 
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"
         android:layout_width="0dp"
-        android:layout_height="411dp"
+        android:layout_height="515dp"
         android:background="@drawable/layout_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -127,7 +127,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/tasksRecyclerView"
                 android:layout_width="414dp"
-                android:layout_height="356dp"
+                android:layout_height="456dp"
                 android:nestedScrollingEnabled="true"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"

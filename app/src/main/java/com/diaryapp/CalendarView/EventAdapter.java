@@ -1,4 +1,4 @@
-package com.diaryapp.Adapter;
+package com.diaryapp.CalendarView;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,6 +26,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     private final Context context;
     private List<Event> events;
+    private ImageButton openEventButton;
     private OnEventClickListener onEventClickListener;
     private final DbHandler dbHandler;
 
@@ -52,6 +54,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.task_layout, parent, false);
+        openEventButton = view.findViewById(R.id.openEventButton);
+
         return new EventViewHolder(view);
     }
 
@@ -90,6 +94,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         });
 
         holder.itemView.setOnClickListener(v -> {
+            if (onEventClickListener != null) {
+                onEventClickListener.onEventClick(event);
+            }
+        });
+
+        openEventButton.setOnClickListener(v -> {
             if (onEventClickListener != null) {
                 onEventClickListener.onEventClick(event);
             }

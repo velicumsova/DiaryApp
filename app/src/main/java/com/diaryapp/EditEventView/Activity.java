@@ -1,4 +1,4 @@
-package com.diaryapp;
+package com.diaryapp.EditEventView;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -29,10 +29,11 @@ import com.diaryapp.EventHandler.DB.DbHandler;
 import com.diaryapp.EventHandler.Event;
 import com.diaryapp.EventHandler.EventCalendar;
 import com.diaryapp.EventHandler.EventGroup;
+import com.diaryapp.R;
 
 import java.util.Objects;
 
-public class EditEventViewActivity extends AppCompatActivity {
+public class Activity extends AppCompatActivity {
     private LinearLayout eventCardHeader;
     private ImageButton returnButton;
     private ImageButton saveButton;
@@ -199,7 +200,7 @@ public class EditEventViewActivity extends AppCompatActivity {
     }
 
     private void onReturnClick() {
-        Intent intent = new Intent(this, EventViewActivity.class);
+        Intent intent = new Intent(this, com.diaryapp.EventView.Activity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
         finish();
@@ -212,9 +213,9 @@ public class EditEventViewActivity extends AppCompatActivity {
         groupList.setAdapter(getGroupsAdapter());
         simpleTypeButton.setChecked(event.getType() == 0);
         longTermTypeButton.setChecked(event.getType() == 1);
-        eventDate.setText(EventViewActivity.convertDate(event.getDate()));
-        eventStartTime.setText(EventViewActivity.convertTime(event.getStartTime()));
-        eventEndTime.setText(EventViewActivity.convertTime(event.getEndTime()));
+        eventDate.setText(com.diaryapp.EventView.Activity.convertDate(event.getDate()));
+        eventStartTime.setText(com.diaryapp.EventView.Activity.convertTime(event.getStartTime()));
+        eventEndTime.setText(com.diaryapp.EventView.Activity.convertTime(event.getEndTime()));
     }
 
     private Drawable newEventHeader(int color) {
@@ -252,7 +253,7 @@ public class EditEventViewActivity extends AppCompatActivity {
                     @SuppressLint("DefaultLocale")
                     String selectedDate = String.format("%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDayOfMonth);
                     event.setDate(selectedDate);
-                    eventDate.setText(EventViewActivity.convertDate(selectedDate));
+                    eventDate.setText(com.diaryapp.EventView.Activity.convertDate(selectedDate));
                 },
                 year,
                 month,
@@ -273,7 +274,7 @@ public class EditEventViewActivity extends AppCompatActivity {
             timePickerDialog = new TimePickerDialog(this,
                     (view, selectedHour, selectedMinute) -> {
                         event.setStartTime(selectedHour * 100 + selectedMinute);
-                        eventStartTime.setText(EventViewActivity.convertTime(event.getStartTime()));
+                        eventStartTime.setText(com.diaryapp.EventView.Activity.convertTime(event.getStartTime()));
                     },
                     hour,
                     minute,
@@ -284,7 +285,7 @@ public class EditEventViewActivity extends AppCompatActivity {
             timePickerDialog = new TimePickerDialog(this,
                     (view, selectedHour, selectedMinute) -> {
                         event.setEndTime(selectedHour * 100 + selectedMinute);
-                        eventEndTime.setText(EventViewActivity.convertTime(event.getEndTime()));
+                        eventEndTime.setText(com.diaryapp.EventView.Activity.convertTime(event.getEndTime()));
                     },
                     hour,
                     minute,

@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tool="http://schemas.android.com/tools"
     android:id="@+id/eventCard"
-    android:layout_width="450dp"
+    android:layout_width="360dp"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
@@ -20,21 +20,35 @@
         android:textColor="#A9FFFFFF"
         android:textStyle="bold" />
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/menuBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:padding="10dp"
+        android:gravity="center_vertical">
 
         <CheckBox
             android:id="@+id/todoCheckBox"
             android:layout_width="wrap_content"
-            android:layout_height="66dp"
+            android:layout_height="wrap_content"
             android:buttonTint="#FFFFFF"
             android:paddingStart="8dp"
+            android:layout_marginEnd="10dp"
+            android:layout_weight="1"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             tool:text="Здесь будет текст события!" />
 
-    </RelativeLayout>
+        <!-- return button -->
+        <ImageButton
+            android:id="@+id/openEventButton"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/return_icon"
+            android:backgroundTint="#FFFFFF"
+            android:contentDescription="Open event"
+            android:rotation="180" />
+
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>

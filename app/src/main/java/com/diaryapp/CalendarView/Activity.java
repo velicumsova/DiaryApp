@@ -1,4 +1,4 @@
-package com.diaryapp;
+package com.diaryapp.CalendarView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -11,9 +11,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.diaryapp.Adapter.EventAdapter;
 import com.diaryapp.EventHandler.DB.DbHandler;
 import com.diaryapp.EventHandler.Event;
+import com.diaryapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 
@@ -23,7 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class CalendarViewActivity extends AppCompatActivity {
+public class Activity extends AppCompatActivity {
     private static final int REQUEST_CODE = 1; // нужно для удаления события и возвращения в календарь
     private TextView tasksDateText;
     private EventAdapter eventAdapter;
@@ -68,10 +68,10 @@ public class CalendarViewActivity extends AppCompatActivity {
         updateEventList(String.format("%04d-%02d-%02d", currentDateCalendar.get(Calendar.YEAR),
                 currentDateCalendar.get(Calendar.MONTH) + 1, currentDateCalendar.get(Calendar.DAY_OF_MONTH)));
 
-        FloatingActionButton addButton = (FloatingActionButton) findViewById(R.id.FAG);
+        FloatingActionButton addButton = findViewById(R.id.FAG);
         addButton.setOnClickListener(v -> addEvent());
 
-        calendarView.addDecorator(new EventDecorator(this, dbHandler));
+        calendarView.addDecorator(new EventDecorator(dbHandler));
         calendarView.invalidateDecorators();
     }
 
@@ -187,7 +187,7 @@ public class CalendarViewActivity extends AppCompatActivity {
     }
 
     private void onEventClick(Event event) {
-        Intent intent = new Intent(this, EventViewActivity.class);
+        Intent intent = new Intent(this, com.diaryapp.EventView.Activity.class);
         intent.putExtra("eventId", event.getId());
         startActivityForResult(intent, REQUEST_CODE);
     }

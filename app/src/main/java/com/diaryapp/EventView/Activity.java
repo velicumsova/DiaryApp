@@ -1,4 +1,4 @@
-package com.diaryapp;
+package com.diaryapp.EventView;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -9,7 +9,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,7 +18,7 @@ import androidx.core.content.ContextCompat;
 
 import com.diaryapp.EventHandler.DB.DbHandler;
 import com.diaryapp.EventHandler.Event;
-import com.diaryapp.EventHandler.EventGroup;
+import com.diaryapp.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,7 +26,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
-public class EventViewActivity extends AppCompatActivity {
+public class Activity extends AppCompatActivity {
     @SuppressLint("ConstantLocale")
     private static final SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     @SuppressLint("ConstantLocale")
@@ -138,14 +137,14 @@ public class EventViewActivity extends AppCompatActivity {
     }
 
     private void onReturnClick() {
-        Intent intent = new Intent(this, CalendarViewActivity.class);
+        Intent intent = new Intent(this, com.diaryapp.CalendarView.Activity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
         finish();
     }
 
     private void onEditClick() {
-        Intent intent = new Intent(this, EditEventViewActivity.class);
+        Intent intent = new Intent(this, com.diaryapp.EditEventView.Activity.class);
         intent.putExtra("eventId", event.getId());
         startActivityForResult(intent, REQUEST_CODE);
     }
