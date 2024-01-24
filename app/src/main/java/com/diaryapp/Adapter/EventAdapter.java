@@ -1,15 +1,10 @@
 package com.diaryapp.Adapter;
 
-import static com.diaryapp.EventHandler.DB.DbHandler.boolToInt;
-
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Looper;
-
-import android.annotation.SuppressLint;
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,12 +26,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     private final Context context;
     private List<Event> events;
     private OnEventClickListener onEventClickListener;
-    private DbHandler dbHandler;
+    private final DbHandler dbHandler;
 
 
     public EventAdapter(Context context, DbHandler dbHandler) {
         this.context = context;
-        this.dbHandler = dbHandler;  // Initialize dbHandler
+        this.dbHandler = dbHandler;
     }
 
     public interface OnEventClickListener {
@@ -65,16 +60,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         Event event = events.get(position);
         event.setClosed(isClosed);
 
-        // Update the event in the database
         dbHandler.updateEvent(event);
 
-        // Update the UI on the main thread
         Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                notifyItemChanged(position); // Use notifyItemChanged instead of notifyDataSetChanged
-            }
+        handler.post(() -> {
+            notifyItemChanged(position);
         });
     }
 
@@ -83,13 +73,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         Event event = events.get(position);
         holder.bind(event);
 
-        // Set an OnCheckedChangeListener to handle checkbox state changes
-        holder.todoCheckBox.setOnCheckedChangeListener(null); // Remove previous listener
+        holder.todoCheckBox.setOnCheckedChangeListener(null);
 
-        // Update the isClosed property when the checkbox state changes
         holder.todoCheckBox.setChecked(event.isClosed());
 
-        // Set the background color and text style dynamically based on the closed state
         if (event.isClosed()) {
             holder.cardView.setCardBackgroundColor(0x20000000);
             holder.todoCheckBox.setPaintFlags(holder.todoCheckBox.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -98,9 +85,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             holder.todoCheckBox.setPaintFlags(holder.todoCheckBox.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
 
-        // Add a new listener to handle checkbox state changes
         holder.todoCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // Use the adapter method to update the database and notify dataset changes
             updateEventClosedState(holder.getAdapterPosition(), isChecked);
         });
 
@@ -118,9 +103,9 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     public static class EventViewHolder extends RecyclerView.ViewHolder {
 
-        private CheckBox todoCheckBox;
-        private TextView textViewTime;
-        private CardView cardView;
+        private final CheckBox todoCheckBox;
+        private final TextView textViewTime;
+        private final CardView cardView;
 
         public EventViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -134,7 +119,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             String formattedTime = formatTime(event.getStartTime(), event.getEndTime(), event.getType());
             textViewTime.setText(formattedTime);
 
-            // Set the CheckBox state based on the isClosed property
             todoCheckBox.setChecked(event.isClosed());
         }
 
@@ -142,13 +126,11 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             String startTimeStr = String.valueOf(startTime);
 
             if (eventType == 0) {
-                // For type 0 (simple event), return only the startTime
                 if (startTimeStr.length() == 3) {
                     startTimeStr = "0" + startTimeStr;
                 }
                 return startTimeStr.substring(0, 2) + ":" + startTimeStr.substring(2);
             } else if (eventType == 1) {
-                // For type 1 (event with start and end time), format as "start - end"
                 String endTimeStr = String.valueOf(endTime);
 
                 if (startTimeStr.length() == 3) {

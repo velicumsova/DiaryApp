@@ -139,30 +139,28 @@ public class EditEventViewActivity extends AppCompatActivity {
 
 
     private int getColorById(int id) {
-        int color = 0;
+        int color;
 
-        switch (id) {
-            case 2131296676:
-                color = Color.argb(255, 252, 122, 122);
-                break;
-            case 2131296649:
-                color = Color.argb(255, 252, 169, 122);
-                break;
-            case 2131296836:
-                color = Color.argb(255, 252, 223, 122);
-                break;
-            case 2131296501:
-                color = Color.argb(255, 122, 252, 143);
-                break;
-            case 2131296358:
-                color = Color.argb(255, 122, 221, 252);
-                break;
-            case 2131296524:
-                color = Color.argb(255, 122, 151, 252);
-                break;
-            case 2131296822:
-                color = Color.argb(255, 205, 122, 244);
-                break;
+        if (id == R.id.redColorButton) {
+            color = Color.argb(255, 252, 122, 122);
+        }
+        else if (id == R.id.orangeColorButton) {
+            color = Color.argb(255, 252, 169, 122);
+        }
+        else if (id == R.id.yellowColorButton) {
+            color = Color.argb(255, 252, 223, 122);
+        }
+        else if (id == R.id.greenColorButton) {
+            color = Color.argb(255, 122, 252, 143);
+        }
+        else if (id == R.id.blueColorButton) {
+            color = Color.argb(255, 122, 221, 252);
+        }
+        else if (id == R.id.indigoColorButton) {
+            color = Color.argb(255, 122, 151, 252);
+        }
+        else {
+            color = Color.argb(255, 205, 122, 244);
         }
 
         return color;
