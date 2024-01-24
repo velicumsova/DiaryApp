@@ -24,13 +24,9 @@ public class EventDecorator implements DayViewDecorator {
 
     public EventDecorator(Context context, DbHandler dbHandler) {
         this.dbHandler = dbHandler;
-        // Получаем количество событий для текущей даты
         CalendarDay today = CalendarDay.today();
         int eventCount = dbHandler.getEventsForDay(today.getDate().toString()).size();
 
-
-
-        // Создаем круглый drawable с учетом количества событий
         this.drawable = createCircleDrawable(context, eventCount);
     }
 
@@ -46,7 +42,6 @@ public class EventDecorator implements DayViewDecorator {
     private Drawable createCircleDrawable(Context context, int eventCount) {
         int color;
 
-        // Определение цвета в зависимости от количества событий (не работает)
         if (eventCount <= 5 && eventCount > 0) {
             color = ContextCompat.getColor(context, R.color.light_pink);
         } else if (eventCount > 5 && eventCount <= 15) {
