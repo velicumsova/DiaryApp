@@ -26,7 +26,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
 
     private final Context context;
     private List<Event> events;
-    private ImageButton openEventButton;
     private OnEventClickListener onEventClickListener;
     private final DbHandler dbHandler;
 
@@ -54,8 +53,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.task_layout, parent, false);
-        openEventButton = view.findViewById(R.id.openEventButton);
-
         return new EventViewHolder(view);
     }
 
@@ -93,13 +90,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             updateEventClosedState(holder.getAdapterPosition(), isChecked);
         });
 
-        holder.itemView.setOnClickListener(v -> {
-            if (onEventClickListener != null) {
-                onEventClickListener.onEventClick(event);
-            }
-        });
-
-        openEventButton.setOnClickListener(v -> {
+        holder.openEventButton.setOnClickListener(v -> {
             if (onEventClickListener != null) {
                 onEventClickListener.onEventClick(event);
             }
@@ -114,6 +105,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     public static class EventViewHolder extends RecyclerView.ViewHolder {
 
         private final CheckBox todoCheckBox;
+        private final ImageButton openEventButton;
         private final TextView textViewTime;
         private final CardView cardView;
 
@@ -122,13 +114,13 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             todoCheckBox = itemView.findViewById(R.id.todoCheckBox);
             textViewTime = itemView.findViewById(R.id.eventTimeString);
             cardView = itemView.findViewById(R.id.eventCard);
+            openEventButton = itemView.findViewById(R.id.openEventButton);
         }
 
         public void bind(Event event) {
             todoCheckBox.setText(event.getTitle());
             String formattedTime = formatTime(event.getStartTime(), event.getEndTime(), event.getType());
             textViewTime.setText(formattedTime);
-
             todoCheckBox.setChecked(event.isClosed());
         }
 

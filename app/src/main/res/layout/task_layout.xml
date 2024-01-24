@@ -42,8 +42,8 @@
         <!-- return button -->
         <ImageButton
             android:id="@+id/openEventButton"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:background="@drawable/return_icon"
             android:backgroundTint="#FFFFFF"
             android:contentDescription="Open event"
