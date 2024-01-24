@@ -1,7 +1,14 @@
 package com.diaryapp.Adapter;
 
+import static com.diaryapp.EventHandler.DB.DbHandler.boolToInt;
+
+import android.os.Handler;
+import android.os.Looper;
+
 import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.diaryapp.EventHandler.DB.DbHandler;
 import com.diaryapp.EventHandler.Event;
 import com.diaryapp.R;
 
@@ -23,10 +31,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     private final Context context;
     private List<Event> events;
     private OnEventClickListener onEventClickListener;
+    private DbHandler dbHandler;
 
 
-    public EventAdapter(Context context) {
+    public EventAdapter(Context context, DbHandler dbHandler) {
         this.context = context;
+        this.dbHandler = dbHandler;  // Initialize dbHandler
     }
 
     public interface OnEventClickListener {
@@ -50,6 +60,24 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         return new EventViewHolder(view);
     }
 
+
+    public void updateEventClosedState(int position, boolean isClosed) {
+        Event event = events.get(position);
+        event.setClosed(isClosed);
+
+        // Update the event in the database
+        dbHandler.updateEvent(event);
+
+        // Update the UI on the main thread
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                notifyItemChanged(position); // Use notifyItemChanged instead of notifyDataSetChanged
+            }
+        });
+    }
+
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Event event = events.get(position);
@@ -70,12 +98,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             holder.todoCheckBox.setPaintFlags(holder.todoCheckBox.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
         }
 
-
         // Add a new listener to handle checkbox state changes
         holder.todoCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            // Update the isClosed property when the checkbox state changes
-            event.setClosed(isChecked);
-            // Optionally, you can save the updated event in the database here
+            // Use the adapter method to update the database and notify dataset changes
+            updateEventClosedState(holder.getAdapterPosition(), isChecked);
         });
 
         holder.itemView.setOnClickListener(v -> {

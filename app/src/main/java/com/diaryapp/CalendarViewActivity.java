@@ -53,7 +53,7 @@ public class CalendarViewActivity extends AppCompatActivity {
 
         // Инициализация RecyclerView и адаптера
         eventList = new ArrayList<>();
-        eventAdapter = new EventAdapter(this);
+        eventAdapter = new EventAdapter(this, dbHandler);
         tasksRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         tasksRecyclerView.setAdapter(eventAdapter);
 
