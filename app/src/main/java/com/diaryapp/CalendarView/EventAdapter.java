@@ -90,6 +90,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             updateEventClosedState(holder.getAdapterPosition(), isChecked);
         });
 
+        holder.itemView.setOnClickListener(v -> {
+            if (onEventClickListener != null) {
+                onEventClickListener.onEventClick(event);
+            }
+        });
+
         holder.openEventButton.setOnClickListener(v -> {
             if (onEventClickListener != null) {
                 onEventClickListener.onEventClick(event);
