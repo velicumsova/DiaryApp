@@ -40,7 +40,7 @@ public class CalendarViewActivity extends AppCompatActivity {
 
         dbHandler = new DbHandler(this);
 
-        this.calendarView = findViewById(R.id.сalendarView);
+        this.calendarView = findViewById(R.id.calendarView);
         tasksDateText = findViewById(R.id.tasksDateText);
         RecyclerView tasksRecyclerView = findViewById(R.id.tasksRecyclerView);
 
