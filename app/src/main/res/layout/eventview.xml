@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
             android:layout_gravity="center"
-            android:text="Просмотр события"
+            android:text="@string/head_label_viewevent"
             android:textAppearance="@style/EventViewName"
             android:textColor="#60000000"
             android:textSize="24sp" />

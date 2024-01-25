@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -31,6 +32,7 @@ public class Activity extends AppCompatActivity {
     private static final SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     @SuppressLint("ConstantLocale")
     private static final SimpleDateFormat outputDateFormat = new SimpleDateFormat("dd.MM.yyyy", Locale.getDefault());
+
     private static final int REQUEST_CODE = 1; // нужно для возвращения в просмотр события
     private DbHandler dbHandler;
     private Event event;
@@ -86,7 +88,13 @@ public class Activity extends AppCompatActivity {
     private void fillWidgets() {
         eventName.setText(event.getTitle());
         eventDate.setText(convertDate(event.getDate()) + " |");
-        eventGroup.setText(event.getGroup());
+
+        if (Objects.equals(event.getGroup(), "Без группы")) {
+            eventGroup.setVisibility(View.GONE);
+        } else {
+            eventGroup.setText(event.getGroup());
+        }
+
         eventText.setText(event.getText());
         eventCardHeader.setBackground(newEventHeader(event.getColor()));
 

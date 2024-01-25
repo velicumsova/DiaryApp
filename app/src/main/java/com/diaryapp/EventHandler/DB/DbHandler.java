@@ -136,6 +136,7 @@ public class DbHandler extends SQLiteOpenHelper {
         db.insert("events", null, values);
         db.close();
     }
+
     private boolean doesGroupExist(String groupName, SQLiteDatabase db) {
         Cursor cursor = db.rawQuery("SELECT * FROM event_groups WHERE group_name=?", new String[]{groupName});
         boolean groupExists = cursor.getCount() > 0;
@@ -169,7 +170,6 @@ public class DbHandler extends SQLiteOpenHelper {
         db.update("events", values, "event_id=?", new String[]{String.valueOf(updatedEvent.getId())});
         db.close();
     }
-
 
     // получить событие по ID
     public Event getEventById(int eventId) {

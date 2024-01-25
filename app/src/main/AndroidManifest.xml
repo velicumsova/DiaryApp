@@ -12,13 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DiaryApp"
         tools:targetApi="31">
+
         <activity
             android:name=".CalendarView.Activity"
             android:exported="true"
             android:theme="@style/Theme.DiaryApp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -27,8 +27,8 @@
             android:exported="true"
             android:theme="@style/Theme.DiaryApp">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.OPENABLE" />
             </intent-filter>
         </activity>
 
@@ -36,8 +36,8 @@
             android:exported="true"
             android:theme="@style/Theme.DiaryApp">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.OPENABLE" />
             </intent-filter>
         </activity>
 

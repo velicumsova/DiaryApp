@@ -273,7 +273,11 @@ public class Activity extends AppCompatActivity {
         if (isStartTime) {
             timePickerDialog = new TimePickerDialog(this,
                     (view, selectedHour, selectedMinute) -> {
-                        event.setStartTime(selectedHour * 100 + selectedMinute);
+                        if (selectedHour * 100 + selectedMinute == 0) {
+                            event.setStartTime(1);
+                        } else {
+                            event.setStartTime(selectedHour * 100 + selectedMinute);
+                        }
                         eventStartTime.setText(com.diaryapp.EventView.Activity.convertTime(event.getStartTime()));
                     },
                     hour,
@@ -284,8 +288,18 @@ public class Activity extends AppCompatActivity {
         } else {
             timePickerDialog = new TimePickerDialog(this,
                     (view, selectedHour, selectedMinute) -> {
-                        event.setEndTime(selectedHour * 100 + selectedMinute);
-                        eventEndTime.setText(com.diaryapp.EventView.Activity.convertTime(event.getEndTime()));
+                        if (selectedHour * 100 + selectedMinute == 0) {
+                            event.setEndTime(1);
+                            eventEndTime.setText(com.diaryapp.EventView.Activity.convertTime(event.getEndTime()));
+                        } else if (selectedHour * 100 + selectedMinute > event.getStartTime()) {
+                            event.setEndTime(selectedHour * 100 + selectedMinute);
+                            eventEndTime.setText(com.diaryapp.EventView.Activity.convertTime(event.getEndTime()));
+                        } else if (selectedHour * 100 + selectedMinute == event.getStartTime()) {
+                            simpleTypeButton.setBackgroundResource(R.drawable.radio_button_border);
+                            longTermTypeButton.setBackgroundResource(R.drawable.event_card_button);
+                            eventEndTime.setVisibility(View.GONE);
+                            event.setType(0);
+                        }
                     },
                     hour,
                     minute,
